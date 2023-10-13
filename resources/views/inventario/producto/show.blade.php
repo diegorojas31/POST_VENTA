@@ -1,7 +1,8 @@
 @extends('adminlte::page')
 
 @section('title', 'Productos')
-<link rel="icon" href="{{ asset('vendor/adminlte/dist/img/LOGOPOSTVENTA.jpg') }}" type="image/x-icon" style="border-radius: 50%;">
+<link rel="icon" href="{{ asset('vendor/adminlte/dist/img/LOGOPOSTVENTA.jpg') }}" type="image/x-icon"
+    style="border-radius: 50%;">
 
 @section('content_header')
 @stop
@@ -44,7 +45,12 @@
                                 <span class="fa fa-barcode"></span>
                                 <b>Codigo de Barra</b>
                                 <br>
-                                <div class="mb-3">{!! DNS1D::getBarcodeHTML($producto->barcode, $producto->tipo_codigo, 5,75,'black') !!}</div>
+                                <div class="mb-3">{!! DNS1D::getBarcodeHTML($producto->barcode, $producto->tipo_codigo, 4, 65, 'black') !!}
+                                </div>
+                                <div style="text-align: center;">
+                                    <a href="" class="btn btn-secondary" style="margin-right: 5px;"> <i
+                                            class="fas fa-download"></i> Imprimir Codigo</a>
+                                </div>
                         </div>
                         <div class="col-md-6">
                             <h4>Stock del producto</h3>

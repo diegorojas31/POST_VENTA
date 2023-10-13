@@ -128,7 +128,7 @@ class ProductoController extends Controller
                     $tipoCodigo = $request->input('tipo_codigo');
                     $validLengths = [
                         'EAN8' => 7,
-                        'EAN13' => 13,
+                        'EAN13' => 12,
                         'UPCA' => 11,
                         'C128' => null, // Permitir cualquier cantidad de caracteres
                     ];
