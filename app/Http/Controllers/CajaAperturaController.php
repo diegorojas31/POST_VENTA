@@ -82,10 +82,10 @@ class CajaAperturaController extends Controller
         
     }
     public function cerrar_caja($cajaventa_id){
-        dd($cajaventa_id);
+        //dd($cajaventa_id);
         Cajaventa::where('id', $cajaventa_id)->update(['saldo_final' => 0, 'fecha_cierre' => now()]);
         $caja_venta=Cajaventa::where('id', $cajaventa_id)->select('*')->first();
-        dd($caja_venta);
+        //dd($caja_venta);
         Caja::where('id', $caja_venta->id_caja)->update([
             'estado' => "inhabilitado",
         ]);

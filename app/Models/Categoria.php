@@ -9,7 +9,7 @@ class Categoria extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['inventario_id', 'nombre', 'descripcion', 'image', 'delete_categoria'];
+    protected $fillable = ['inventario_id', 'nombre', 'descripcion', 'image', 'delete_categoria','id_empresa'];
 
     public function productos(){
         return $this->hasMany('App\Models\Producto');

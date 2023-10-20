@@ -24,7 +24,8 @@ return new class extends Migration
             $table->string('image')->nullable();
             $table->integer('delete_producto')->default(1);
             $table->timestamps();
-
+            $table->unsignedBigInteger('empresa_id');
+            $table->foreign('empresa_id')->references('id')->on('empresa_clientes');
             $table->foreign('categoria_id')->references('id')->on('categorias');
             $table->foreign('medida_id')->references('id')->on('medidas');
         });

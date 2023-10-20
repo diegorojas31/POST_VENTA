@@ -18,6 +18,8 @@ return new class extends Migration
             $table->string('descripcion')->nullable()->default('');
             $table->string('image')->nullable()->default('images/no-image.png');
             $table->integer('delete_categoria')->default(1);
+            $table->unsignedBigInteger('id_empresa');
+            $table->foreign('id_empresa')->references('id')->on('empresa_clientes');
             $table->timestamps();
 
             $table->foreign('inventario_id')->references('id')->on('inventarios');

@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Auth;
 class CajaController extends Controller
 {
     public function index(){
-        $cajas = Caja::where('delete_caja', 1)->get();
+        
 
             
             
@@ -20,7 +20,8 @@ class CajaController extends Controller
         $datos = User::join('empresa_clientes','empresa_clientes.id','=','users.empresa_id')
         ->where('users.id',$userId)
         ->select('*')->first();
-        
+        //dd($datos);
+        $cajas = Caja::where('delete_caja', 1)->where('id_empresa',$datos->empresa_id)->get();
         
         config(['adminlte.logo' => "<b>$datos->razon_social</b>"]);
         return view('caja.index',compact('cajas'));
@@ -40,10 +41,16 @@ class CajaController extends Controller
     }
     public function store(Request $request){
         //return $request->all();
+        $userId = Auth::id();
+        
+        $datos = User::join('empresa_clientes','empresa_clientes.id','=','users.empresa_id')
+        ->where('users.id',$userId)
+        ->select('empresa_clientes.id as id_empresa')->first();
 
         $caja = new Caja();
         $caja->title_caja=$request->nombrecaja;
         $caja->estado="inhabilitado";
+        $caja->id_empresa=$datos->id_empresa;
         $caja->save();
         return redirect()->route('caja.show',$caja->id);
 

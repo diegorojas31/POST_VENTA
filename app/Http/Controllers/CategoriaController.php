@@ -54,11 +54,18 @@ class CategoriaController extends Controller
             'file' => 'image|mimes:jpeg,png,jpg|max:2048'
         ]);
 
+        $userId = Auth::id();
+        
+        $datos = User::join('empresa_clientes','empresa_clientes.id','=','users.empresa_id')
+        ->where('users.id',$userId)
+        ->select('*')->first();
+
         $categoria = new Categoria();
         $categoria->inventario_id = 1;
         $categoria->nombre = $request->input('nombre');
         $categoria->descripcion = $request->input('descripcion');
         $categoria->image = 'images/no-image.png';
+        $categoria->id_empresa=$datos->empresa_id;
 
         if ($request->file('file')) {
             $url = Storage::put('categorias', $request->file('file'));

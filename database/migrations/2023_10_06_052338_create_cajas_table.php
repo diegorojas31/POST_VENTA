@@ -16,6 +16,8 @@ return new class extends Migration
             //$table->unsignedBigInteger('id_ubicacion');
             $table->string('title_caja');
             $table->string('estado');
+            $table->unsignedBigInteger('id_empresa');
+            $table->foreign('id_empresa')->references('id')->on('empresa_clientes');
             $table->timestamps();
             $table->integer('delete_caja')->default(1);
             //FORANEO

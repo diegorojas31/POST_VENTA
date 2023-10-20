@@ -1,7 +1,8 @@
 @extends('adminlte::page')
 
 @section('title', 'Crear Producto')
-<link rel="icon" href="{{ asset('vendor/adminlte/dist/img/LOGOPOSTVENTA.jpg') }}" type="image/x-icon" style="border-radius: 50%;">
+<link rel="icon" href="{{ asset('vendor/adminlte/dist/img/LOGOPOSTVENTA.jpg') }}" type="image/x-icon"
+    style="border-radius: 50%;">
 
 @section('content_header')
 @stop
@@ -105,7 +106,7 @@
                 <!-- Contenido de la tercera columna -->
                 <div class="col-md-4">
                     <div class="row">
-                        <div class="col-md-4">
+                        <div class="col-md-3">
                             <div class="form-group">
                                 {!! Form::label('tipo_codigo', 'Tipo Codigo') !!}
                                 {!! Form::select('tipo_codigo', $tiposDeCodigoDeBarras, null, ['class' => 'form-control']) !!}
@@ -114,18 +115,35 @@
                                 @enderror
                             </div>
                         </div>
-                        <div class="col-md-8">
-                            <div class="form-group">
-                                {!! Form::label('barcode', 'Codigo de barra') !!}
-                                {!! Form::text('barcode', null, [
-                                    'class' => 'form-control',
-                                    'placeholder' => 'Codigo único',
-                                ]) !!}
-
-                                @error('barcode')
-                                    <span class="text-danger">{{ $message }}</span>
-                                @enderror
+                        <div class="col-md-9">
+                            <div class="row">
+                                <div class="col-md-10">
+                                    <div class="form-group">
+                                        {!! Form::label('barcode', 'Codigo de barra') !!}
+                                        {!! Form::text('barcode', null, [
+                                            'class' => 'form-control',
+                                            'placeholder' => 'Codigo único',
+                                            'id' => 'barcode-input',
+                                        ]) !!}
+                                        @error('barcode')
+                                            <span class="text-danger">{{ $message }}</span>
+                                        @enderror
+                                    </div>
+                                </div>
+                                <div class="col-md-2">
+                                    <div class="form-group">
+                                        {!! Form::label('auto', 'Auto') !!}
+                                        {!! Form::checkbox('auto', true, null, [
+                                            'class' => 'form-control',
+                                            'id' => 'auto-checkbox',
+                                        ]) !!}
+                                        @error('auto')
+                                            <span class="text-danger">{{ $message }}</span>
+                                        @enderror
+                                    </div>
+                                </div>
                             </div>
+
                         </div>
                     </div>
                     <div class="form-group">
@@ -239,4 +257,23 @@
             reader.readAsDataURL(file);
         }
     </script>
+
+    <script>
+        $(document).ready(function() {
+            // Cuando se cargue la página, verifica el estado del checkbox y actúa en consecuencia
+            if ($('#auto-checkbox').is(':checked')) {
+                $('#barcode-input').prop('disabled', true);
+            }
+
+            // Agrega un controlador de eventos al checkbox
+            $('#auto-checkbox').change(function() {
+                if (this.checked) {
+                    $('#barcode-input').prop('disabled', true);
+                } else {
+                    $('#barcode-input').prop('disabled', false);
+                }
+            });
+        });
+    </script>
+
 @stop
