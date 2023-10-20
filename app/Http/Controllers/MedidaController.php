@@ -49,9 +49,9 @@ class MedidaController extends Controller
     {
         //
         $request->validate([
-            'nombre' => 'required|unique:medidas|max:50',
+            'nombre' => 'required|max:50',
             'descripcion' => 'max:150',
-            'abreviatura' => 'required|unique:medidas|max:5',
+            'abreviatura' => 'required|max:5',
         ]);
 
         $medida = new Medida();

@@ -24,7 +24,7 @@ class ProductoIndex extends Component
         $stocks = Stock::join('productos', 'productos.id', '=', 'stocks.producto_id')
         ->whereIn('productos.id', $productoIds)
         ->get();
-       // dd($stocks);
+      //  dd($productos , $stocks);
         return view('livewire.inventario.producto-index', compact('productos', 'stocks'));
         
     }

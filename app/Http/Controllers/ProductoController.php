@@ -65,7 +65,9 @@ class ProductoController extends Controller
      */
 
     public function store(Request $request)
+    
     {
+       // dd($request);
         // Crear una regla de validación personalizada para el campo barcode
         $validator = Validator::make($request->all(), [
             'nombre' => 'required|unique:productos|max:50',
@@ -106,20 +108,28 @@ class ProductoController extends Controller
         if ($validator->fails()) {
             return redirect()->back()->withErrors($validator)->withInput();
         }
+        $userId = Auth::id();
+        $datos = User::join('empresa_clientes','empresa_clientes.id','=','users.empresa_id')
+        ->where('users.id',$userId)
+        ->select('*')->first();
 
         // Crear y guardar el producto
         $producto = new Producto();
         $producto->nombre = $request->input('nombre');
         $producto->descripcion = $request->input('descripcion');
         $producto->marca = $request->input('marca');
-        $producto->image = 'images/no-image.png';
+        $producto->empresa_id = $datos->empresa_id;
+        
         $producto->categoria_id = $request->input('categoria_id');
         $producto->medida_id = $request->input('medida_id'); // Corregir el campo medida_id
         $producto->precio = $request->input('precio');
 
         if ($request->file('file')) {
             $url = Storage::put('productos', $request->file('file'));
+           // dd($url);
             $producto->image = 'storage/' . $url;
+        }else{
+            $producto->image = 'images/no-image.png';
         }
 
         $producto->tipo_codigo = $request->input('tipo_codigo');

@@ -40,7 +40,7 @@
                         @endphp
                         <tr>
                             <td>{{ $producto->id }}</td>
-                            <td class="text-center"><img src="{{ asset($producto->image) }}" alt="" width="20"></td>
+                            <td class="text-center"><img src="{{ asset($stock->image) }}" alt="" width="20"></td>
                             <td class="text-center">{{ $producto->barcode }}</td>
                             <td>{{ $producto->nombre }}</td>
                             <td>{{ $producto->descripcion }}</td>
