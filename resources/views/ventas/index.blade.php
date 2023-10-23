@@ -455,17 +455,17 @@
                 $('#tabla_ventas tfoot th:nth-child(5)').text(nuevoTotalVenta.toFixed(2) + ' Bs.');
             }
 
-            $('#stock_cantidad').on('input', function() {
+            $('#stock_cantidad').on('change', function() {
                 var cantidad = $(this).val();
                 var disponible = $('#stock_disponible').val();
 
                 if (cantidad > disponible) {
-                    $(this).addClass('is-invalid'); // Agrega la clase de estilo de error
-
+                    $(this).addClass('is-invalid');
                 } else {
-                    $(this).removeClass('is-invalid'); // Remueve la clase de estilo de error si es válida
+                    $(this).removeClass('is-invalid');
                 }
             });
+
             $('.cerrar_caja').click(function() {
 
                 // Realiza una solicitud GET a la URL '/ruta/de/tu/endpoint'
