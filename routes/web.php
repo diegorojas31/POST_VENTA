@@ -8,6 +8,7 @@ use App\Http\Controllers\ProductoController;
 use App\Http\Controllers\CajaController;
 use App\Http\Controllers\CajaAperturaController;
 use App\Http\Controllers\VentasController;
+use App\Http\Controllers\ClienteController;
 
 /*
 |--------------------------------------------------------------------------
@@ -57,6 +58,8 @@ Route::group(['middleware' => 'can:Admin'], function () {
     Route::get('caja/{caja}/edit',[CajaController::class,'edit'])->name('caja.edit');
     Route::get('caja/{caja}/eliminar',[CajaController::class, 'destroy'])->name('caja.delete');
     Route::put('caja/{caja}',[CajaController::class,'update'])->name('caja.update');
+
+    Route::get('obtener_datos_cajaventa/{id_cajaventa}',[CajaController::class, 'obtener_datos_cajaventa'])->name('obtener_datos_cajaventa');
     
 
 });
@@ -80,12 +83,16 @@ Route::middleware('auth')->group(function () {
     Route::get('/apertura/{caja}/create', [CajaAperturaController::class,'create'])->name('apertura.create');
     Route::post('apertura/index/{caja}',[CajaAperturaController::class,'store'])->name('apertura.store');
     Route::match(['get', 'put'], 'apertura/in/{caja}', [CajaAperturaController::class, 'stores'])->name('apertura.stores');
-    Route::get('cerrar_caja/{cajaventa_id}',[CajaAperturaController::class,'cerrar_caja'])->name('cerrar_caja');
+    Route::post('cerrar_caja',[CajaAperturaController::class,'cerrar_caja'])->name('cerrar_caja');
 
 
-    route::get('abrir_ventas/{cajaventa_id}',[VentasController::class,'abrir_ventas','abrir_ventas'])->name('abrir_ventas');
+    route::get('abrir_ventas/{cajaventa_id}',[VentasController::class,'abrir_ventas'])->name('abrir_ventas');
     Route::get('allventas_caja/{caja_id}',[App\Http\Controllers\UsersController::class,'allventas_caja'])->name('allventas_caja');
+    Route::get('/buscar_producto/{search}', [VentasController::class, 'buscar_producto'])->name('buscar_producto');
 
+
+
+    Route::get('/buscar-por-nit/{nit}', [ClienteController::class, 'buscarPorNit'])->name('buscarPorNit');
 
 });
 

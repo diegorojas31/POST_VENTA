@@ -375,6 +375,19 @@ return [
 
             ],
         ],
+       /* [
+            'text' => 'Ventas Admin',
+            'icon' => 'fas fa-cubes',
+            'can' =>'Admin',
+            'submenu' => [
+                [
+                    'text' => 'All ventas',
+                    'url'  => 'dashboard/inventario/categorias',
+                ],
+
+
+            ],
+        ],*/
         [
             'text' => 'Cajas',
             'icon' => 'fas fa-fax',
@@ -393,7 +406,7 @@ return [
             'icon'    => 'fas fa-shopping-cart',
             'submenu' => [
                 [
-                    'text'    => 'Iniciar Venta',
+                    'text'    => 'Vender',
                     'route'     => 'apertura.index',
                 ],
 

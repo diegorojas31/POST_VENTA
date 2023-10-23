@@ -5,6 +5,11 @@
             <strong>{{ session('info') }}</strong>
         </div>
     @endif
+    @if (session('error'))
+        <div class="alert alert-danger">
+            <strong>{{ session('error') }}</strong>
+        </div>
+    @endif
     <div class="card card-primary">
         <div class="card-header">
             <h3 class="card-title">Unidades de Medida</h3>
@@ -44,7 +49,7 @@
             <table class="table table-bordered">
                 <thead>
                     <tr>
-                        <th style="width: 10px">#</th>
+                        {{-- <th style="width: 10px">#</th> --}}
                         <th style="width: 200px">Nombre</th>
                         <th style="width: 650px">Descripción</th>
                         <th style="width: 50px" class="text-center">Abreviatura</th>
@@ -55,7 +60,7 @@
                 <tbody>
                     @foreach ($medidas as $medida)
                         <tr>
-                            <td>{{ $medida->id }}</td>
+                            {{-- <td>{{ $medida->id }}</td> --}}
                             <td>{{ $medida->nombre }}</td>
                             <td>{{ $medida->descripcion }}</td>
                             <td class="text-center">{{ $medida->abreviatura }}</td>

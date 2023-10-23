@@ -251,6 +251,9 @@ class ProductoController extends Controller
     public function destroy(Producto $producto)
     {
         //
+        $producto->delete_producto = 0;
+        $producto->save();
+        return redirect()->route('productos.index')->with('info', 'Producto eliminado con éxito.');
     }
 
     // Función para generar un código de barras aleatorio

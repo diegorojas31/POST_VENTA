@@ -48,7 +48,7 @@
                             <div class="d-flex align-items-center">
                                 <div class="d-flex">
                                     @if($caja->estado == 'habilitado')
-                                    <a class="btn btn-icon btn-flush-dark btn-rounded flush-soft-hover" data-bs-toggle="tooltip" data-placement="top" title="" data-bs-original-title="Volver a caja" href="">
+                                    <a class="btn btn-icon btn-flush-dark btn-rounded flush-soft-hover" data-bs-toggle="tooltip" data-placement="top" title="" data-bs-original-title="Volver a caja" href="{{ route('abrir_ventas',['cajaventa_id'=>$caja->id]) }}">
                                         <span class="icon">
                                             <span class="feather-icon">
                                                 <i class="fa fa-lg fa-fw fa-eye"></i>

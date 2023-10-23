@@ -5,6 +5,11 @@
             <strong>{{ session('info') }}</strong>
         </div>
     @endif
+    @if (session('error'))
+        <div class="alert alert-danger">
+            <strong>{{ session('error') }}</strong>
+        </div>
+    @endif
     <div class="card card-primary">
         <div class="card-header">
             <h3 class="card-title">Categorias</h3>
@@ -19,7 +24,7 @@
             <table class="table table-bordered">
                 <thead>
                     <tr>
-                        <th style="width: 10px">#</th>
+                        {{-- <th style="width: 10px">#</th> --}}
                         <th style="width: 200px">Nombre</th>
                         <th style="width: 650px">Descripción</th>
                         <th class="text-center">Imagen</th>
@@ -29,10 +34,11 @@
                 <tbody>
                     @foreach ($categorias as $categoria)
                         <tr>
-                            <td>{{ $categoria->id }}</td>
+                            {{--<td>{{ $contador++ }}</td>--}}
                             <td>{{ $categoria->nombre }}</td>
                             <td>{{ $categoria->descripcion }}</td>
-                            <td class="text-center"><img src="{{ asset($categoria->image) }}" alt="" width="20"></td>
+                            <td class="text-center"><img src="{{ asset($categoria->image) }}" alt=""
+                                    width="20"></td>
                             <td class="text-center">
                                 <!-- Icono de editar con enlace -->
                                 <a href="{{ route('categorias.edit', $categoria->id) }}" class="btn btn-primary btn-sm">
@@ -51,7 +57,6 @@
                             </td>
                         </tr>
                     @endforeach
-
                 </tbody>
             </table>
         </div>

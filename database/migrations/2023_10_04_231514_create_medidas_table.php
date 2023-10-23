@@ -14,12 +14,14 @@ return new class extends Migration
         Schema::create('medidas', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('inventario_id');
+            $table->unsignedBigInteger('id_empresa');
             $table->string('nombre', 150)->nullable()->default('');
             $table->string('descripcion', 150)->nullable()->default('');
             $table->string('abreviatura', 5)->default('');
             $table->integer('delete_medida')->default(1);
             $table->timestamps();
-
+            
+            $table->foreign('id_empresa')->references('id')->on('empresa_clientes');
             $table->foreign('inventario_id')->references('id')->on('inventarios');
         });
     }

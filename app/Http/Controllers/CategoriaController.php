@@ -7,6 +7,7 @@ use App\Models\Categoria;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
+use App\Models\Producto;
 
 class CategoriaController extends Controller
 {
@@ -140,8 +141,12 @@ class CategoriaController extends Controller
     public function destroy(Categoria $categoria)
     {
         //
-        $categoria->delete_categoria = 0;
-        $categoria->save();
-        return redirect()->route('categorias.index')->with('info', 'Categoria Eliminada con éxito.');
+        if ($categoria->productos->isEmpty()) {
+            $categoria->delete_categoria = 0;
+            $categoria->save();
+            return redirect()->route('categorias.index')->with('info', 'Categoria Eliminada con éxito.');
+        } else {
+            return redirect()->route('categorias.index')->with('error', 'No se puede eliminar una categoría con productos relacionados.');
+        }
     }
 }

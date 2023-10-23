@@ -21,10 +21,9 @@
             <table class="table table-sm">
                 <thead>
                     <tr>
-                        <th style="width: 10px">#</th>
-                        <th class="text-center">Imagen</th>
                         <th class="text-center">Codigo</th>
                         <th>Nombre</th>
+                        <th class="text-center">Imagen</th>
                         <th>Descripción</th>
                         <th>Marca</th>
                         <th>Ubicación</th>
@@ -39,23 +38,30 @@
                             $stock = $stocks->where('producto_id', $producto->id)->first();
                         @endphp
                         <tr>
-                            <td>{{ $producto->id }}</td>
-                            <td class="text-center"><img src="{{ asset($stock->image) }}" alt="" width="20"></td>
                             <td class="text-center">{{ $producto->barcode }}</td>
                             <td>{{ $producto->nombre }}</td>
+                            <td class="text-center"><img src="{{ asset($producto->image) }}" alt=""
+                                    width="20"></td>
                             <td>{{ $producto->descripcion }}</td>
                             <td>{{ $producto->marca }}</td>
-                            <td>{{ $stock->ubicacion }}</td>
+                            <td>{{ $producto->ubicacion }}</td>
                             <td class="text-center">{{ $producto->precio }}</td>
                             <td class="text-center">{{ $stock ? $stock['cantidad'] : 'N/A' }}</td>
                             <td class="text-center">
-                                <div class="btn-group btn-group-sm">
+                                <div class="btn-group-sm">
                                     <a href="{{ route('productos.show', $producto->id) }}" class="btn btn-info"><i
                                             class="fas fa-eye"></i></a>
                                     <a href="{{ route('productos.edit', $producto->id) }}" class="btn btn-primary"><i
                                             class="fa fa-edit"></i></a>
-                                    <a href="{{ route('productos.destroy', $producto->id) }}" class="btn btn-danger"><i
-                                            class="fas fa-trash"></i></a>
+                                    <form action="{{ route('productos.destroy', $producto->id) }}" method="POST"
+                                        class="d-inline">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="btn btn-danger" style="padding: 0.25rem 0.5rem;"
+                                            onclick="return confirm('¿Estás seguro de que deseas eliminar este producto?')">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </form>
                                 </div>
                             </td>
                         </tr>

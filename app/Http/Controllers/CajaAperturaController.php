@@ -81,14 +81,16 @@ class CajaAperturaController extends Controller
     public function edit(){
         
     }
-    public function cerrar_caja($cajaventa_id){
-        //dd($cajaventa_id);
-        Cajaventa::where('id', $cajaventa_id)->update(['saldo_final' => 0, 'fecha_cierre' => now()]);
-        $caja_venta=Cajaventa::where('id', $cajaventa_id)->select('*')->first();
-        //dd($caja_venta);
+    public function cerrar_caja(Request $request){
+        
+        $montofinal = $request->input('montofinal_caja');
+        Cajaventa::where('id', $request->input('id_caja_venta'))->update(['saldo_final' => $montofinal, 'fecha_cierre' => now()]);
+        $caja_venta=Cajaventa::where('id', $request->input('id_caja_venta'))->select('*')->first();
+        
         Caja::where('id', $caja_venta->id_caja)->update([
             'estado' => "inhabilitado",
         ]);
+        return redirect()->route('apertura.index');
 
 
     }
