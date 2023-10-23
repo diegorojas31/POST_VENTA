@@ -18,6 +18,8 @@ class CategoriaIndex extends Component
 
     public $search = "Busqueda";
 
+    public $contador = 1;
+
     public function render()
     {
 
@@ -27,7 +29,9 @@ class CategoriaIndex extends Component
         ->where('users.id',$userId)
         ->select('*')->first();
        // dd($datos);
+       
         $categorias = Categoria::where('delete_categoria', 1)->where('id_empresa',$datos->empresa_id)->orderBy('id', 'asc')->paginate(10);
+
         return view('livewire.inventario.categoria-index', compact('categorias'));
     }
 }

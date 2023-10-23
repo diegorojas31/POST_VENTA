@@ -54,11 +54,18 @@ class MedidaController extends Controller
             'abreviatura' => 'required|max:5',
         ]);
 
+        $userId = Auth::id();
+
+        $datos = User::join('empresa_clientes', 'empresa_clientes.id', '=', 'users.empresa_id')
+        ->where('users.id', $userId)
+        ->select('*')->first();
+
         $medida = new Medida();
         $medida->inventario_id = 1;
         $medida->nombre = $request->input('nombre');
         $medida->descripcion = $request->input('descripcion');
         $medida->abreviatura = $request->input('abreviatura');
+        $medida->id_empresa = $datos->empresa_id;
 
         $medida->save();
 
@@ -111,8 +118,12 @@ class MedidaController extends Controller
     public function destroy(Medida $medida)
     {
         //
-        $medida->delete_medida = 0;
-        $medida->save();
-        return redirect()->route('medidas.index')->with('info', 'Unidad de medida eliminada con éxito.');
+        if ($medida->productos->isEmpty()) {
+            $medida->delete_medida = 0;
+            $medida->save();
+            return redirect()->route('medidas.index')->with('info', 'Unidad de Medida Eliminada con éxito.');
+        } else {
+            return redirect()->route('medidas.index')->with('error', 'No se puede eliminar una Unidad de Medida con productos relacionados.');
+        }
     }
 }

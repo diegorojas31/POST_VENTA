@@ -5,6 +5,8 @@ namespace App\Livewire\Inventario;
 use Livewire\Component;
 use App\Models\Medida;
 use Livewire\WithPagination;
+use App\Models\User;
+use Illuminate\Support\Facades\Auth;
 
 class MedidaIndex extends Component
 {
@@ -15,7 +17,13 @@ class MedidaIndex extends Component
 
     public function render()
     {
-        $medidas = Medida::where('delete_medida', 1)->orderBy('id', 'asc')->paginate(10);
+        $userId = Auth::id();
+
+        $datos = User::join('empresa_clientes', 'empresa_clientes.id', '=', 'users.empresa_id')
+        ->where('users.id', $userId)
+        ->select('*')->first();
+
+        $medidas = Medida::where('delete_medida', 1)->where('id_empresa', $datos->empresa_id)->orderBy('id', 'asc')->paginate(10);
         return view('livewire.inventario.medida-index', compact('medidas'));
     }
 }
