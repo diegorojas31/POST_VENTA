@@ -456,9 +456,9 @@
             }
 
             $('#stock_cantidad').on('change', function() {
-                var cantidad = $(this).val();
-                var disponible = $('#stock_disponible').val();
-                console.log(cantidad,disponible);
+                var cantidad = parseInt($(this).val()); // Convierte a número
+                var disponible = parseInt($('#stock_disponible').val()); // Convierte a número
+                console.log(cantidad, disponible);
 
                 if (cantidad > disponible) {
                     $(this).addClass('is-invalid');
