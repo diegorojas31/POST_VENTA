@@ -499,13 +499,15 @@
                             console.log('if', data);
 
                             return {
-                                results: [{
-                                    text: data.nombre + ' - ' + data.marca,
-                                    disponible: data.cantidad,
-                                    precio: data.precio,
-                                    codigo: data.barcode,
-                                    id: data.stock_id
-                                }]
+                                results: data.map(function(item) {
+                                    return {
+                                        text: item.nombre + ' - ' + item.marca,
+                                        disponible: item.cantidad,
+                                        precio: item.precio,
+                                        codigo: item.barcode,
+                                        id: item.stock_id
+                                    };
+                                })
                             };
                         } else {
                             console.log('else', data);
