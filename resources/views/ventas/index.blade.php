@@ -136,7 +136,7 @@
                                                 <div class="form-group row">
                                                     <div class="col-md-6">
                                                         <label class="form-label">Disponible </label>
-                                                        <input class="form-control" name="stock_disponible"
+                                                        <input class="form-control" name="stock_disponible" type="number"
                                                             id="stock_disponible" disabled>
                                                     </div>
                                                     <div class="col-md-6">
