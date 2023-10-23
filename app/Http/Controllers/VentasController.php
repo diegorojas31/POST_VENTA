@@ -40,7 +40,7 @@ class VentasController extends Controller
                   ->orWhere('productos.nombre', 'like', '%' . $search . '%');
         })
         ->select('stocks.id as stock_id','*')
-        ->first();
+        ->get();
 
 
         if ($producto) {
