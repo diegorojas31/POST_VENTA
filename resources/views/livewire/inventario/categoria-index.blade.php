@@ -17,7 +17,7 @@
         <div class="card-body">
             <div class="d-flex justify-content-between align-items-center mb-4">
                 <div class="col-6">
-                    <input wire:model="search" class="form-control" placeholder="Buscar">
+                    <input wire:model.live="search" class="form-control" type="text" placeholder="Buscar categorias..">
                 </div>
                 <a href="{{ route('categorias.create') }}" class="btn btn-success">Añadir nuevo</a>
             </div>
@@ -34,7 +34,7 @@
                 <tbody>
                     @foreach ($categorias as $categoria)
                         <tr>
-                            {{--<td>{{ $contador++ }}</td>--}}
+                            {{-- <td>{{ $contador++ }}</td> --}}
                             <td>{{ $categoria->nombre }}</td>
                             <td>{{ $categoria->descripcion }}</td>
                             <td class="text-center"><img src="{{ asset($categoria->image) }}" alt=""

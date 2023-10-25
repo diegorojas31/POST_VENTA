@@ -8,9 +8,14 @@ use Livewire\Component;
 use App\Models\Producto;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Empresa_cliente;
+use Livewire\WithPagination;
 
 class ProductoIndex extends Component
 {
+  use WithPagination;
+
+  protected $paginationTheme = "bootstrap";
+
   public function render()
   {
     $userId = Auth::id();

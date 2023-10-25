@@ -68,7 +68,6 @@
                     @endforeach
                 </tbody>
             </table>
-
         </div>
         <div class="card-footer">
             <div class="pagination pagination-sm m-0 float-right">

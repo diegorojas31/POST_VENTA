@@ -19,7 +19,7 @@
 
             <div class="d-flex justify-content-between align-items-center mb-3">
                 <div class="col-6">
-                    <input wire:model="search" class="form-control" placeholder="Buscar">
+                    <input wire:model.live="search" class="form-control" placeholder="Buscar unidades de medida...">
                 </div>
                 <a href="{{ route('medidas.create') }}" class="btn btn-success">Añadir nuevo</a>
             </div>
