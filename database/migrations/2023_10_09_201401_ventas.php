@@ -19,6 +19,8 @@ return new class extends Migration
             $table->foreign('id_caja_venta')->references('id')->on('cajaventas');
             $table->unsignedBigInteger('id_cliente');
             $table->foreign('id_cliente')->references('id')->on('clientes');
+            $table->unsignedBigInteger('id_tipo_pago');
+            $table->foreign('id_tipo_pago')->references('id')->on('tipos_pagos');
             $table->integer('delete_venta')->default(1); // 1 ACTIVO , 0 ELIMINADO
 
             $table->timestamps();

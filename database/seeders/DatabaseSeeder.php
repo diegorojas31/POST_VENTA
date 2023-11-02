@@ -5,6 +5,7 @@ namespace Database\Seeders;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use App\Models\Cargos;
 use App\Models\Inventario;
+use App\Models\TipoPago;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -20,6 +21,22 @@ class DatabaseSeeder extends Seeder
         //     'name' => 'Test User',
         //     'email' => 'test@example.com',
         // ]);
+
+        TipoPago::create([
+            'tipo_pago'=> 'Efectivo',
+            'descripcion_tipo' => 'Todo tipo de pago en efectivo',
+
+        ]);
+        TipoPago::create([
+            'tipo_pago'=> 'Qr',
+            'descripcion_tipo' => 'Todo tipo de pago en Qr',
+            
+        ]);
+        TipoPago::create([
+            'tipo_pago'=> 'Qr',
+            'descripcion_tipo' => 'Todo tipo de pago en Tarjeta',
+            
+        ]);
 
         $this->call(RolSeeder::class);
         Cargos::create([

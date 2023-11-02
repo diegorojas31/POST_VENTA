@@ -13,8 +13,8 @@ return new class extends Migration
     {
         Schema::create('facturas', function (Blueprint $table) {
             $table->id();
-            $table->integer('nit_cliente');
-            $table->foreign('nit_cliente')->references('nit_cliente')->on('clientes'); 
+            $table->integer('id_cliente');
+            $table->foreign('id_cliente')->references('id')->on('clientes'); 
             $table->string('razon_social'); 
             $table->decimal('subtotal_venta', 10, 2);
             $table->decimal('montototal_venta', 10, 2); 

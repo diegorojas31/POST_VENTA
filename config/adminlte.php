@@ -375,19 +375,19 @@ return [
 
             ],
         ],
-       /* [
-            'text' => 'Ventas Admin',
+        [
+            'text' => 'Mis Ventas',
             'icon' => 'fas fa-cubes',
             'can' =>'Admin',
             'submenu' => [
                 [
                     'text' => 'All ventas',
-                    'url'  => 'dashboard/inventario/categorias',
+                    'url'  => 'allventas',
                 ],
 
 
             ],
-        ],*/
+        ],
         [
             'text' => 'Cajas',
             'icon' => 'fas fa-fax',
@@ -401,6 +401,22 @@ return [
         ],
     ],
         ['header' => 'EMPLEADOS'],
+        [
+            'text'    => 'Clientes ',
+            'icon'    => 'fas fa-street-view',
+            'submenu' => [
+                [
+                    'text'    => 'All Clientes',
+                    'route'     => 'clientes.index',
+                ],
+                [
+                    'text'    => 'Registrar Clientes',
+                    'route'     => 'abrir_create_clientes',
+                ],
+
+
+            ],
+        ],
         [
             'text'    => 'Ventas (Proximamente)',
             'icon'    => 'fas fa-shopping-cart',

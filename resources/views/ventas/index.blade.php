@@ -29,6 +29,7 @@
                         <div class="row">
                             <div class="col-xxl-9 col-lg-8">
                                 <form class="edit-post-form">
+                                    @csrf
                                     <div class="form-group row">
                                         <div class="col-md-6">
                                             <label class="form-label">Nit </label>
@@ -103,10 +104,12 @@
                                         Venta</button>
                                     <div class="form-group">
                                         <label class="form-label">Metodo de pago</label>
-                                        <select class="form-select">
-                                            <option selected value="1">En efectivo</option>
-                                            <option value="2">Tarjeta</option>
+                                        <select class="form-select" id="tipo_pago" name="tipo_pago">
+                                            <option selected value="0">Seleccione tipo de pago</option>
+                                            <option value="1">En efectivo</option>
                                             <option value="2">Qr</option>
+                                            <option value="3">Tarjeta</option>
+                                            
                                         </select>
                                     </div>
                                     <div class="card card-border">
@@ -221,6 +224,10 @@
 
 @section('css')
     <link rel="stylesheet" href="/css/admin_custom.css">
+    <!-- Sweetalert2 CSS -->
+    <link href="{{ asset('Template/vendors/@sweetalert2/theme-bootstrap-4/bootstrap-4.min.css') }}" rel="stylesheet"
+        type="text/css">
+
     <!-- Bootstrap Dropify CSS -->
     <link href="{{ asset('Template/vendors/dropify/dist/css/dropify.min.css') }}" rel="stylesheet" type="text/css" />
 
@@ -248,6 +255,8 @@
 
     <!-- Bootstrap Core JS -->
     <script src="{{ asset('Template/vendors/bootstrap/dist/js/bootstrap.bundle.min.js') }}"></script>
+
+    <script src="{{ asset('Template/vendors/sweetalert2/dist/sweetalert2.min.js') }}"></script>
 
     <!-- FeatherIcons JS -->
     <script src="{{ asset('Template/dist/js/feather.min.js') }}"></script>
@@ -389,7 +398,7 @@
                     '<td>' + stockPrecio + ' Bs. </td>' +
                     '<td>' + (parseFloat(stockCantidad) * parseFloat(stockPrecio)).toFixed(2) +
                     ' Bs. </td>' +
-                    '<td><button type="button" class="btn btn-danger btn-sm borrarFila"><i class="bi bi-trash"></i></button></td>' +
+                    '<td><button type="button" class="btn btn-success btn-sm borrarFila"><i class="bi bi-trash"></i></button></td>' +
                     '</tr>';
 
                 $('#tabla_ventas tbody').append(newRow);
@@ -408,6 +417,13 @@
             $('#registrar_venta').click(function(event) {
                 event.preventDefault();
 
+
+                var nombre_cliente = $('#nombre_cliente').val();
+                var apellido_cliente = $('#apellido_cliente').val();
+                var celular_cliente = $('#celular_cliente').val();
+                var nit_cliente = $('#search option:selected').text();
+
+                // $('#buscar_producto option:selected').text();
                 var productos = [];
 
                 // Obtener todos los valores de la tabla
@@ -437,7 +453,83 @@
                 });
 
                 var productosJSON = JSON.stringify(productos);
-                console.log(productosJSON);
+                console.log(productosJSON, nombre_cliente, apellido_cliente, celular_cliente, nit_cliente);
+                var totalVenta = $('#tabla_ventas tfoot tr th:last').prev().text();
+
+                // Convierte el valor a un número (puede ser necesario si el valor está en formato de texto)
+                totalVenta = parseFloat(totalVenta);
+                var tipo_pago = $('#tipo_pago').val();
+
+
+                // Ahora totalVenta contiene el valor total de la venta
+                console.log('Total Venta:', totalVenta);
+
+                Swal.fire({
+                    html: '<div class="mb-3"><i class="bi bi-bag-check fs-5 text-success"></i></div><h5 class="text-success">Confirmar Pago</h5><p>TOTAL DE LA VENTA:  ' +
+                        totalVenta + ' Bs. </p>',
+                    customClass: {
+                        confirmButton: 'btn btn-outline-secondary text-success',
+                        cancelButton: 'btn btn-outline-secondary text-grey',
+                        container: 'swal2-has-bg'
+                    },
+                    showCancelButton: true,
+                    buttonsStyling: false,
+                    confirmButtonText: 'Confirmar Pago',
+                    cancelButtonText: 'Cancelar',
+                    reverseButtons: true,
+                }).then((result) => {
+                    if (result.value) {
+
+                        // Configura la solicitud AJAX
+                        $.ajax({
+                            url: '{{ route('registrar_venta') }}', // URL de ejemplo
+                            type: 'POST', // Método de solicitud (POST en este caso)
+                            dataType: 'json', // Tipo de datos que enviarás y esperas recibir (JSON en este caso)
+                            data: {
+                                _token:'{{ csrf_token() }}',
+                                caja_id: $('#caja_id').val(),
+                                nombre_cliente: nombre_cliente,
+                                apellido_cliente: apellido_cliente,
+                                celular_cliente: celular_cliente,
+                                productosJSON: productosJSON,
+                                nit_cliente: nit_cliente,
+                                tipo_pago: tipo_pago,
+                                totalVenta: totalVenta
+                            }, // Datos que enviarás al servidor
+                            success: function(data) {
+                                // Esta función se ejecuta cuando la solicitud es exitosa
+                                console.log('Respuesta exitosa:', data);
+                                Swal.fire({
+                                    html: '<div class="d-flex align-items-center"><i class="bi bi-bag-check me-2 fs-3 text-success"></i><h5 class="text-success mb-0">La venta fue registrada exitosamente!</h5></div>',
+                                    timer: 2000,
+                                    customClass: {
+                                        content: 'p-0 text-left',
+                                        actions: 'justify-content-start',
+                                    },
+                                    showConfirmButton: false,
+                                    buttonsStyling: false,
+                                })
+                            },
+                            error: function(xhr, status, error) {
+                                // Esta función se ejecuta en caso de error
+                                console.error('Error en la solicitud:', status, error);
+                                Swal.fire({
+                                    html: '<div class="d-flex align-items-center"><i class="bi bi-bag-x me-2 fs-3 text-danger"></i><h5 class="text-danger mb-0">No se pudo procesar la venta!</h5></div>',
+                                    timer: 2000,
+                                    customClass: {
+                                        content: 'p-0 text-left',
+                                        actions: 'justify-content-start',
+                                    },
+                                    showConfirmButton: false,
+                                    buttonsStyling: false,
+                                })
+                            }
+                        });
+
+
+
+                    }
+                })
             });
 
 

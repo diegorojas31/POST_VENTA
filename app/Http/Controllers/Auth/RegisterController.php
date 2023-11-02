@@ -102,6 +102,6 @@ class RegisterController extends Controller
             'password' => Hash::make($data['password']),
             'rol_id' => 1,
             'empresa_id' => $empresa->id
-        ])->syncRoles(1);;
+        ])->syncRoles(1);
     }
 }
