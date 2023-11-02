@@ -34,6 +34,7 @@ Route::get('/', function () {
 Route::get('/getMail',[MailController::class,'getMail']);
 
 Auth::routes();
+
 Auth::routes(['verify' => true]);
 
 //Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
