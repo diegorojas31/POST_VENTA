@@ -14,7 +14,8 @@ return new class extends Migration
         Schema::create('stocks', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('producto_id');
-            $table->string('ubicacion', 50)->nullable()->default('');
+            //$table->string('ubicacion', 50)->nullable()->default('');
+            $table->unsignedBigInteger('almacen_id')->nullable();;
             $table->integer('cantidad')->default(0);
             $table->integer('minimo')->default(0);
             $table->integer('maximo')->default(0);
@@ -22,6 +23,7 @@ return new class extends Migration
             $table->timestamps();
 
             $table->foreign('producto_id')->references('id')->on('productos');
+            $table->foreign('almacen_id')->references('id')->on('almacens');
         });
     }
 

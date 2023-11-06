@@ -21,31 +21,11 @@
                 <div class="col-6">
                     <input wire:model.live="search" class="form-control" placeholder="Buscar unidades de medida...">
                 </div>
-                <a href="{{ route('medidas.create') }}" class="btn btn-success">Añadir nuevo</a>
+                {{-- <a href="{{ route('medidas.create') }}" class="btn btn-success">Añadir nuevo</a> --}}
+                <button type="button" class="btn btn-success" data-toggle="modal" data-target="#modal-lg">
+                    Añadir nuevo
+                </button>
             </div>
-            <!-- MODAL PARA EDITAR UNIDAD DE MEDIDA  -->
-            {{--<div class="modal fade" id="modal-default" style="display: none;" aria-hidden="true">
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h4 class="modal-title">Editar Categoria</h4>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">×</span>
-                            </button>
-                        </div>
-                        <div class="modal-body">
-                            <p>One fine body…</p>
-                        </div>
-                        <div class="modal-footer justify-content-between">
-                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                            <button type="button" class="btn btn-primary">Save changes</button>
-                        </div>
-                    </div>
-
-                </div>
-
-            </div>--}}
-            <!-- FIN DE MODAL PARA EDITAR UNIDAD DE MEDIDA -->
             <table class="table table-bordered">
                 <thead>
                     <tr>
@@ -68,11 +48,6 @@
                                 <a href="{{ route('medidas.edit', $medida->id) }}" class="btn btn-primary btn-sm">
                                     <i class="fa fa-edit"></i> Editar
                                 </a>
-                                {{--<button type="button" class="btn btn-primary btn-sm" data-toggle="modal"
-                                    data-target="#modal-editar">
-                                    <i class="fa fa-edit"></i> Editar
-                                </button>--}}
-
                                 <!-- Icono de eliminar con formulario (puedes usar un modal para confirmar la eliminación) -->
                                 <form action="{{ route('medidas.destroy', $medida->id) }}" method="POST"
                                     style="display: inline;">
@@ -92,6 +67,15 @@
         <div class="card-footer">
             <div class="pagination pagination-sm m-0 float-right">
                 {{ $medidas->links() }}
+            </div>
+        </div>
+    </div>
+
+    {{-- Modal para crear nueva unidad --}}
+    <div class="modal fade" id="modal-lg" style="display: none;" aria-hidden="true" wire:ignore.self>
+        <div class="modal-dialog">
+            <div class="modal-content">
+                @livewire('inventario.medida-create')
             </div>
         </div>
     </div>

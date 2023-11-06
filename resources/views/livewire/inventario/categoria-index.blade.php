@@ -19,7 +19,10 @@
                 <div class="col-6">
                     <input wire:model.live="search" class="form-control" type="text" placeholder="Buscar categorias..">
                 </div>
-                <a href="{{ route('categorias.create') }}" class="btn btn-success">Añadir nuevo</a>
+                {{-- <a href="{{ route('categorias.create') }}" class="btn btn-success">Añadir nuevo</a> --}}
+                <button type="button" class="btn btn-success" data-toggle="modal" data-target="#modal-lg">
+                    Añadir nuevo
+                </button>
             </div>
             <table class="table table-bordered">
                 <thead>
@@ -34,7 +37,6 @@
                 <tbody>
                     @foreach ($categorias as $categoria)
                         <tr>
-                            {{-- <td>{{ $contador++ }}</td> --}}
                             <td>{{ $categoria->nombre }}</td>
                             <td>{{ $categoria->descripcion }}</td>
                             <td class="text-center"><img src="{{ asset($categoria->image) }}" alt=""
@@ -63,6 +65,14 @@
         <div class="card-footer clearfix">
             <div class="pagination pagination-sm m-0 float-right">
                 {{ $categorias->links() }}
+            </div>
+        </div>
+    </div>
+    {{-- Modal para crear nueva categoria --}}
+    <div class="modal fade" id="modal-lg" style="display: none;" aria-hidden="true" wire:ignore.self>
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                @livewire('inventario.categoria-create')
             </div>
         </div>
     </div>

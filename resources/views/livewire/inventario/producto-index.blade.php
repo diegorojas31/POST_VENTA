@@ -43,8 +43,8 @@
                             <td class="text-center"><img src="{{ asset($producto->image) }}" alt=""
                                     width="20"></td>
                             <td>{{ $producto->descripcion }}</td>
-                            <td>{{ $producto->marca }}</td>
-                            <td>{{ $producto->ubicacion }}</td>
+                            <td>{{ optional($producto->marca)->nombre ?? 'Ninguno' }}</td>
+                            <td>{{ optional($stock->almacen)->nombre ?? 'Ninguno' }}</td>
                             <td class="text-center">{{ $producto->precio }}</td>
                             <td class="text-center">{{ $stock ? $stock['cantidad'] : 'N/A' }}</td>
                             <td class="text-center">

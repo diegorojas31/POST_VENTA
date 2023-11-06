@@ -4,6 +4,10 @@
 <link rel="icon" href="{{ asset('vendor/adminlte/dist/img/LOGOPOSTVENTA.jpg') }}" type="image/x-icon"
     style="border-radius: 50%;">
 
+@section('content_top_nav_right')
+    @livewire('notifications')
+@endsection
+
 @section('content_header')
 @stop
 
@@ -46,12 +50,6 @@
                                             ]) !!}
                                         </span>
                                     </label>
-                                    <label class="input-group-btn ml-2">
-                                        <span class="btn btn-sm btn-danger">
-                                            <i class="fas fa-eye-slash"></i> Eliminar Imagen
-                                            {{-- {!! Form::file('file', ['style' => 'display:none', 'accept' => 'image/*']) !!} --}}
-                                        </span>
-                                    </label>
                                 </div>
                                 @error('file')
                                     <span class="text-danger">{{ $message }}</span>
@@ -60,51 +58,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-md-4">
-                    <!-- Contenido de la segunda columna -->
-                    <div class="form-group">
-                        {!! Form::label('nombre', 'Nombre') !!}
-                        {!! Form::text('nombre', null, [
-                            'class' => 'form-control',
-                            'placeholder' => 'Ingrese el nombre del producto',
-                        ]) !!}
-
-                        @error('nombre')
-                            <span class="text-danger">{{ $message }}</span>
-                        @enderror
-                    </div>
-                    <div class="form-group">
-                        {!! Form::label('categoria_id', 'Categoria del Producto') !!}
-                        {!! Form::select('categoria_id', $categorias, null, ['class' => 'form-control']) !!}
-
-                        @error('categoria_id')
-                            <span class="text-danger">{{ $message }}</span>
-                        @enderror
-                    </div>
-                    <!-- Unidad de Medida -->
-                    <div class="form-group">
-                        {!! Form::label('medida_id', 'Unidad de Medida') !!}
-                        {!! Form::select('medida_id', $medidas, null, ['class' => 'form-control']) !!}
-
-                        @error('medida_id')
-                            <span class="text-danger">{{ $message }}</span>
-                        @enderror
-                    </div>
-                    <!-- Precio -->
-                    <div class="form-group">
-                        {!! Form::label('precio', 'Precio') !!}
-                        {!! Form::number('precio', 0, [
-                            'class' => 'form-control',
-                            'placeholder' => 'Precio del producto.',
-                        ]) !!}
-
-                        @error('precio')
-                            <span class="text-danger">{{ $message }}</span>
-                        @enderror
-                    </div>
-                </div>
-                <!-- Contenido de la tercera columna -->
-                <div class="col-md-4">
+                <div class="col-md-8">
                     <div class="row">
                         <div class="col-md-3">
                             <div class="form-group">
@@ -132,7 +86,7 @@
                                 </div>
                                 <div class="col-md-2">
                                     <div class="form-group">
-                                        {!! Form::label('auto', 'Auto') !!}
+                                        {!! Form::label('auto', 'Automatico') !!}
                                         {!! Form::checkbox('auto', true, null, [
                                             'class' => 'form-control',
                                             'id' => 'auto-checkbox',
@@ -147,6 +101,151 @@
                         </div>
                     </div>
                     <div class="form-group">
+                        {!! Form::label('nombre', 'Nombre') !!}
+                        {!! Form::text('nombre', null, [
+                            'class' => 'form-control',
+                            'placeholder' => 'Ingrese el nombre del producto',
+                        ]) !!}
+
+                        @error('nombre')
+                            <span class="text-danger">{{ $message }}</span>
+                        @enderror
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                {!! Form::label('categoria_id', 'Categoria') !!}
+                                <div class="input-group">
+                                    {!! Form::select('categoria_id', $categorias, null, ['class' => 'form-control']) !!}
+                                    <div class="input-group-append">
+                                        <button type="button" class="btn btn-success">
+                                            <i class="fas fa-plus"></i> <!-- Icono + -->
+                                        </button>
+                                    </div>
+                                </div>
+
+                                @error('categoria_id')
+                                    <span class="text-danger">{{ $message }}</span>
+                                @enderror
+                            </div>
+                            {{-- @livewire('inventario.componentes.categoria-select') --}}
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                {!! Form::label('medida_id', 'Unidad de Medida') !!}
+                                <div class="input-group">
+                                    {!! Form::select('medida_id', $medidas, null, ['class' => 'form-control']) !!}
+                                    <div class="input-group-append">
+                                        <button type="button" class="btn btn-success">
+                                            <i class="fas fa-plus"></i> <!-- Icono + -->
+                                        </button>
+                                    </div>
+                                </div>
+
+                                @error('medida_id')
+                                    <span class="text-danger">{{ $message }}</span>
+                                @enderror
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <!-- Precio -->
+                            <div class="form-group">
+                                {!! Form::label('precio', 'Precio') !!}
+                                {!! Form::number('precio', 0, [
+                                    'class' => 'form-control',
+                                    'placeholder' => 'Precio del producto.',
+                                ]) !!}
+
+                                @error('precio')
+                                    <span class="text-danger">{{ $message }}</span>
+                                @enderror
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <!-- Marca -->
+                            <div class="form-group">
+                                {!! Form::label('marca_id', 'Marca') !!}
+                                <div class="input-group">
+                                    {!! Form::select('marca_id', ['' => 'Ninguno'] + $marcas->all(), null, ['class' => 'form-control']) !!}
+                                    <div class="input-group-append">
+                                        <button type="button" class="btn btn-success">
+                                            <i class="fas fa-plus"></i> <!-- Icono + -->
+                                        </button>
+                                    </div>
+                                </div>
+
+                                @error('marca_id')
+                                    <span class="text-danger">{{ $message }}</span>
+                                @enderror
+                            </div>
+
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <!-- Stock Actual -->
+                            <div class="form-group">
+                                {!! Form::label('cantidad', 'Stock (actual)') !!}
+                                {!! Form::number('cantidad', 0, [
+                                    'class' => 'form-control',
+                                    'placeholder' => 'Cantidad Actual',
+                                ]) !!}
+
+                                @error('cantidad')
+                                    <span class="text-danger">{{ $message }}</span>
+                                @enderror
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <!-- Almacen -->
+                            <div class="form-group">
+                                {!! Form::label('almacen_id', 'Almacen') !!}
+                                <div class="input-group">
+                                    {!! Form::select('almacen_id', ['' => 'Ninguno'] + $almacens->all(), null, ['class' => 'form-control']) !!}
+                                    <div class="input-group-append">
+                                        <button type="button" class="btn btn-success">
+                                            <i class="fas fa-plus"></i> <!-- Icono + -->
+                                        </button>
+                                    </div>
+                                </div>
+
+                                @error('almacen_id')
+                                    <span class="text-danger">{{ $message }}</span>
+                                @enderror
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                {!! Form::label('minimo', 'Stock minimo') !!}
+                                {!! Form::number('minimo', 0, [
+                                    'class' => 'form-control',
+                                    'placeholder' => 'Cantidad minima del producto.',
+                                ]) !!}
+
+                                @error('minimo')
+                                    <span class="text-danger">{{ $message }}</span>
+                                @enderror
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                {!! Form::label('maximo', 'Stock máximo') !!}
+                                {!! Form::number('maximo', 200, [
+                                    'class' => 'form-control',
+                                    'placeholder' => 'Caantidad maxima del prducto.',
+                                ]) !!}
+
+                                @error('maximo')
+                                    <span class="text-danger">{{ $message }}</span>
+                                @enderror
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
                         {!! Form::label('descripcion', 'Descripción') !!}
                         {!! Form::textarea('descripcion', null, [
                             'class' => 'form-control',
@@ -154,87 +253,17 @@
                             'rows' => 4,
                         ]) !!}
                     </div>
-
-                    <div class="form-group mt-4">
-                        {!! Form::label('marca', 'Marca') !!}
-                        {!! Form::text('marca', null, [
-                            'class' => 'form-control',
-                            'placeholder' => 'Ingrese la Marca del producto (opcional)',
-                        ]) !!}
+                    <div class="row">
+                        <div class="col-md-4">
+                        </div>
+                        <div class="col-md-8 text-right">
+                            {!! Form::submit('Crear Producto', ['class' => 'btn btn-success']) !!}
+                            {!! Form::close() !!}
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div class="row">
-                <div class="col-md-4">
-                </div>
-                <div class="col-md-8">
-                    <div class="card-header">
-                        <h3 class="card-title"><strong>Stock Producto</strong></h3>
-                    </div>
-                </div>
-            </div>
-            <div class="row mt-3">
-                <div class="col-md-4">
-                </div>
-                <div class="col-md-4">
-                    <!-- Cantidad -->
-                    <div class="form-group">
-                        {!! Form::label('cantidad', 'Cantidad (actual)') !!}
-                        {!! Form::number('cantidad', 0, [
-                            'class' => 'form-control',
-                            'placeholder' => 'Cantidad Actual',
-                        ]) !!}
-
-                        @error('cantidad')
-                            <span class="text-danger">{{ $message }}</span>
-                        @enderror
-                    </div>
-                    <div class="form-group">
-                        {!! Form::label('minimo', 'Cantidad Minima') !!}
-                        {!! Form::number('minimo', 0, [
-                            'class' => 'form-control',
-                            'placeholder' => 'Cantidad minima del producto.',
-                        ]) !!}
-
-                        @error('minimo')
-                            <span class="text-danger">{{ $message }}</span>
-                        @enderror
-                    </div>
-
-                </div>
-                <div class="col-md-4">
-                    <div class="form-group">
-                        {!! Form::label('ubicacion', 'Ubicacion') !!}
-                        {!! Form::text('ubicacion', null, [
-                            'class' => 'form-control',
-                            'placeholder' => 'Ubicacion del Procducto',
-                        ]) !!}
-                    </div>
-                    <div class="form-group">
-                        {!! Form::label('maximo', 'Cantidad Maxima') !!}
-                        {!! Form::number('maximo', 10, [
-                            'class' => 'form-control',
-                            'placeholder' => 'Caantidad maxima del prducto.',
-                        ]) !!}
-
-                        @error('maximo')
-                            <span class="text-danger">{{ $message }}</span>
-                        @enderror
-                    </div>
-                </div>
-            </div>
-
-            <div class="row">
-                <div class="col-md-4">
-                </div>
-                <div class="col-md-8 text-right">
-                    {!! Form::submit('Crear Producto', ['class' => 'btn btn-success']) !!}
-                    {!! Form::close() !!}
-                </div>
-
             </div>
         </div>
-
         <div class="card-footer">
             <a href="{{ route('productos.index') }}" class="btn btn-dark float-right">
                 <i class="fa fa-arrow-right"></i> Ver lista

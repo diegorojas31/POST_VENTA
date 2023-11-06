@@ -17,6 +17,8 @@ class MedidaIndex extends Component
 
     public $search = '';
 
+    protected $listeners = ['render' => 'render'];
+    
     public function render()
     {
         $userId = Auth::id();

@@ -150,7 +150,7 @@ return [
 
     'layout_topnav' => null,
     'layout_boxed' => null,
-    'layout_fixed_sidebar' => null,
+    'layout_fixed_sidebar' => true,
     'layout_fixed_navbar' => null,
     'layout_fixed_footer' => null,
     'layout_dark_mode' => null,
@@ -349,28 +349,28 @@ return [
             'can' =>'Admin',
             'submenu' => [
                 [
-                    'text' => 'Categorias',
-                    'url'  => 'dashboard/inventario/categorias',
-                ],
-                [
-                    'text' => 'Crear Categoria',
-                    'url'  => 'dashboard/inventario/categorias/create',
+                    'text' => 'Crear Producto',
+                    'url'  => 'dashboard/inventario/productos/create',
                 ],
                 [
                     'text' => 'Productos',
                     'url'  => 'dashboard/inventario/productos',
                 ],
                 [
-                    'text' => 'Crear Producto',
-                    'url'  => 'dashboard/inventario/productos/create',
+                    'text' => 'Categorias',
+                    'url'  => 'dashboard/inventario/categorias',
                 ],
                 [
                     'text' => 'Unidades Medida',
                     'url'  => 'dashboard/inventario/medidas',
                 ],
                 [
-                    'text' => 'Crear Unidades Medida',
-                    'url'  => 'dashboard/inventario/medidas/create',
+                    'text' => 'Marca',
+                    'url'  => 'dashboard/inventario/marcas',
+                ],
+                [
+                    'text' => 'Alamacen',
+                    'url'  => 'dashboard/inventario/almacenes',
                 ],
 
             ],

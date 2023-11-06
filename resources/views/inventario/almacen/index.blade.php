@@ -1,6 +1,6 @@
 @extends('adminlte::page')
 
-@section('title', 'Categorias')
+@section('title', 'Almacenes')
 {{-- <link rel="icon" href="{{ asset('vendor/adminlte/dist/img/LOGOPOSTVENTA.jpg') }}" type="image/x-icon" style="border-radius: 50%;"> --}}
 
 @section('content_top_nav_right')
@@ -11,7 +11,7 @@
 @stop
 
 @section('content')
-    @livewire('inventario.categoria-index')
+    @livewire('inventario.almacen-index')
 @stop
 
 @section('css')
