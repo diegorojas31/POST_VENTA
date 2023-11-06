@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Producto extends Model
 {
 
-    protected $fillable = ['categoria_id', 'medida_id', 'nombre', 'descripcion', 'precio', 'barcode', 'marca', 'image','delete_producto','empresa_id'];
+    protected $fillable = ['categoria_id', 'medida_id', 'nombre', 'descripcion', 'precio', 'barcode', 'marca_id', 'image','delete_producto','empresa_id'];
 
     use HasFactory;
 
@@ -21,4 +21,9 @@ class Producto extends Model
     {
         return $this->belongTo('App\Models\Medida');
     }
+
+    public function marca()
+    {
+        return $this->belongsTo('App\Models\Marca', 'marca_id');
+    }    
 }

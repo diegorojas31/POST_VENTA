@@ -48,27 +48,19 @@
 
                         <td>
                             <div class="d-flex align-items-center">
-                                <div class="btn-group selectable-split-dropdown">
-                                    <button type="button"
-                                        class="btn btn-outline-light btn-dyn-text w-100p">Remind</button>
-                                    <button type="button"
-                                        class="btn btn-outline-light dropdown-toggle dropdown-toggle-split me-3"
-                                        data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                        <span class="sr-only">Toggle Dropdown</span>
-                                    </button>
-                                    <div class="dropdown-menu dropdown-menu-end">
-                                        <a class="dropdown-item" href="#">Remind</a>
-                                        <a class="dropdown-item" href="#">Sent</a>
-                                        <a class="dropdown-item" href="#">Active</a>
-                                        <div class="dropdown-divider"></div>
-                                        <a class="dropdown-item" href="#">Edit</a>
-                                    </div>
-                                </div>
-                                <div class="d-flex">
-                                    <a class="btn btn-icon btn-flush-dark btn-rounded flush-soft-hover"
-                                        data-bs-toggle="tooltip" data-bs-placement="top" title=""
-                                        data-bs-original-title="Archive" href="#"><span class="btn-icon-wrap"><span
-                                                class="feather-icon"><i data-feather="archive"></i></span></span></a>
+
+                                <a data-id="{{ $venta->id_venta }}" class="btn btn-icon btn-flush-dark btn-rounded flush-soft-hover " 
+                                data-bs-toggle="tooltip" 
+                                data-bs-placement="top" 
+                                title="Descargar Venta Pdf" 
+                                data-bs-original-title="Archivo" 
+                                href="{{ route('generarpdfventas', ['idventa' => $venta->id_venta]) }}">
+                                <span class="btn-icon-wrap">
+                                   <span class="fas fa-file-pdf"></span>
+                                </span>
+                             </a>
+                                 
+                                 
                                     <a class="btn btn-icon btn-flush-dark btn-rounded flush-soft-hover"
                                         data-bs-toggle="tooltip" data-bs-placement="top" title=""
                                         data-bs-original-title="Edit" href="contact-details.html"><span
@@ -160,5 +152,29 @@
                 }
             });
         });
+    </script>
+
+<script>
+    $(document).ready(function() {
+        $('.descargar-pdf').click(function(e) {
+            e.preventDefault(); // Prevenir el comportamiento predeterminado del enlace
+    
+            var ventaId = $(this).data('id'); // Obtener el ID de la venta
+            console.log(ventaId);
+            // Realizar la solicitud AJAX utilizando el ID de la venta
+         /*   $.ajax({
+                url: 'ruta/de/tu/controlador/accion/' + ventaId, // Reemplaza con la URL correcta
+                method: 'GET', // Puedes usar 'POST' si necesitas enviar datos al servidor
+                success: function(response) {
+                    // Manejar la respuesta del servidor aquí
+                    console.log(response);
+                },
+                error: function(error) {
+                    // Manejar errores de la solicitud AJAX aquí
+                    console.error('Error:', error);
+                }
+            });*/
+        });
+    });
     </script>
 @stop

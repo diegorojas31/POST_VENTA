@@ -69,6 +69,24 @@ public function abrir_create_clientes(){
             $cliente = Cliente::findOrFail($id);
             $cliente->delete_cliente = 0; // Cambia el campo delete_cliente a 0 (eliminado)
             $cliente->save();
+
+             //--------------------------------BITACORA-----------------------
+             $userId = Auth::id();
+             $user = User::find($userId);
+             
+             Activity()
+                 ->causedBy($user->id)
+                 ->inLog($user->name)
+                 ->performedOn($cliente)
+                 ->withProperties([
+                     'nit_cliente' => $cliente->nit_cliente,
+                     'nombre_cliente' => $cliente->nombre_cliente,
+                     'apellido_cliente' => $cliente->apellido_cliente
+                 ])
+                 ->log('Cliente Eliminado: '.$cliente->nombre_cliente.' '.$cliente->apellido_cliente)
+             ;
+             
+             /////////////////////////////////////////////////////////////////
             
             return redirect()->route('clientes.index')->with('success', 'Cliente marcado como eliminado');
         } catch (\Exception $e) {
@@ -106,6 +124,25 @@ public function abrir_create_clientes(){
             'nit_cliente' => $request->input('nit_cliente'),
             'empresa_id'=>$request->input('id_bussines'),
         ]);
+
+         //--------------------------------BITACORA-----------------------
+         $userId = Auth::id();
+         $user = User::find($userId);
+         $ipUsuario = request()->ip();
+         Activity()
+             ->causedBy($user->id)
+             ->inLog($user->name)
+             ->performedOn($cliente)
+             ->withProperties([
+                 'nit_cliente' => $cliente->nit_cliente,
+                 'nombre_cliente' => $cliente->nombre_cliente,
+                 'apellido_cliente' => $cliente->apellido_cliente,
+                 'ip_pc'=>$ipUsuario
+             ])
+             ->log('Cliente Creado: '.$cliente->nombre_cliente.' '.$cliente->apellido_cliente)
+         ;
+         
+         /////////////////////////////////////////////////////////////////
 
    
         return redirect()->route('clientes.index');

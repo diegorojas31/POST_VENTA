@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<factura id="comprobante" version="1.1.0">
+  <infoTributaria>
+    <ambiente>1</ambiente>
+    <tipoEmision>1</tipoEmision>
+    <razonSocial>Salgraf Cia. Ltda.</razonSocial>
+    <nombreComercial>Salgraf Cia. Ltda.</nombreComercial>
+    <ruc>1792067464001</ruc>
+    <claveAcceso>0409201401179206746400110010010000411530013208617</claveAcceso>
+    <codDoc>01</codDoc>
+    <estab>001</estab>
+    <ptoEmi>001</ptoEmi>
+    <secuencial>000041153</secuencial>
+    <dirMatriz>Eucaliptos E1-374</dirMatriz>
+  </infoTributaria>
+  <infoFactura>
+    <fechaEmision>04/09/2014</fechaEmision>
+    <dirEstablecimiento>DIR10-DE-AGOSTO-SN-</dirEstablecimiento>
+    <obligadoContabilidad>SI</obligadoContabilidad>
+    <tipoIdentificacionComprador>04</tipoIdentificacionComprador>
+    <razonSocialComprador>PRUEBAS SERVICIO DE RENTAS INTERNAS</razonSocialComprador>
+    <identificacionComprador>1090072370001</identificacionComprador>
+    <totalSinImpuestos>460.00</totalSinImpuestos>
+    <totalDescuento>0.00</totalDescuento>
+    <totalConImpuestos>
+      <totalImpuesto>
+        <codigo>2</codigo>
+        <codigoPorcentaje>2</codigoPorcentaje>
+        <baseImponible>460.00</baseImponible>
+        <valor>55.20</valor>
+      </totalImpuesto>
+    </totalConImpuestos>
+    <propina>0.00</propina>
+    <importeTotal>515.20</importeTotal>
+    <moneda>DOLAR</moneda>
+  </infoFactura>
+  <detalles>
+    <detalle>
+      <codigoPrincipal>PTA0103F01</codigoPrincipal>
+      <descripcion>Jabn-Floresta-35g-LAVANDA-papel-stresh</descripcion>
+      <cantidad>1000</cantidad>
+      <precioUnitario>0.46</precioUnitario>
+      <descuento>0</descuento>
+      <precioTotalSinImpuesto>460.00</precioTotalSinImpuesto>
+      <detallesAdicionales>
+        <detAdicional/>
+      </detallesAdicionales>
+      <impuestos>
+        <impuesto>
+          <codigo>2</codigo>
+          <codigoPorcentaje>2</codigoPorcentaje>
+          <tarifa>12</tarifa>
+          <baseImponible>460.00</baseImponible>
+          <valor>55.20</valor>
+        </impuesto>
+      </impuestos>
+    </detalle>
+  </detalles>
+</factura>

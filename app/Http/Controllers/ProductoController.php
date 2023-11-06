@@ -10,10 +10,14 @@ use App\Models\Producto;
 use Milon\Barcode\DNS1D;
 use App\Models\Categoria;
 use Illuminate\Http\Request;
+use App\Models\Almacen;
+use App\Models\Marca;
 
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
+
+use App\Notifications\StockBajo;
 
 class ProductoController extends Controller
 {
@@ -47,6 +51,7 @@ class ProductoController extends Controller
 
 
         config(['adminlte.logo' => "<b>$datos->razon_social</b>"]);
+
         $tiposDeCodigoDeBarras = [
             'EAN8' => 'EAN8',
             'EAN13' => 'EAN13',
@@ -54,10 +59,21 @@ class ProductoController extends Controller
             'C128' => 'C128'
         ];
 
-        //$categorias = Categoria::where('deleted', false)->get();
-        $categorias = Categoria::where('delete_categoria', 1)->pluck('nombre', 'id');
-        $medidas = Medida::where('delete_medida', 1)->pluck('nombre', 'id');
-        return view('inventario.producto.create', compact('categorias', 'medidas', 'tiposDeCodigoDeBarras'));
+        $marcas = Marca::where('delete_marca', 1)
+            ->where('id_empresa', $datos->empresa_id)
+            ->pluck('nombre', 'id');
+
+        $almacens = Almacen::where('delete_almacen', 1)
+            ->where('id_empresa', $datos->empresa_id)
+            ->pluck('nombre', 'id');
+        $categorias = Categoria::where('delete_categoria', 1)
+            ->where('id_empresa', $datos->empresa_id)
+            ->pluck('nombre', 'id');
+        $medidas = Medida::where('delete_medida', 1)
+            ->where('id_empresa', $datos->empresa_id)
+            ->pluck('nombre', 'id');
+
+        return view('inventario.producto.create', compact('categorias', 'medidas', 'tiposDeCodigoDeBarras', 'marcas', 'almacens'));
     }
 
     /**
@@ -65,9 +81,9 @@ class ProductoController extends Controller
      */
 
     public function store(Request $request)
-    
+
     {
-       // dd($request);
+        // dd($request);
         // Crear una regla de validación personalizada para el campo barcode
         $validator = Validator::make($request->all(), [
             'nombre' => 'required|unique:productos|max:50',
@@ -109,26 +125,26 @@ class ProductoController extends Controller
             return redirect()->back()->withErrors($validator)->withInput();
         }
         $userId = Auth::id();
-        $datos = User::join('empresa_clientes','empresa_clientes.id','=','users.empresa_id')
-        ->where('users.id',$userId)
-        ->select('*')->first();
+        $datos = User::join('empresa_clientes', 'empresa_clientes.id', '=', 'users.empresa_id')
+            ->where('users.id', $userId)
+            ->select('*')->first();
 
         // Crear y guardar el producto
         $producto = new Producto();
         $producto->nombre = $request->input('nombre');
         $producto->descripcion = $request->input('descripcion');
-        $producto->marca = $request->input('marca');
+        $producto->marca_id = $request->input('marca_id');
         $producto->empresa_id = $datos->empresa_id;
-        
+
         $producto->categoria_id = $request->input('categoria_id');
         $producto->medida_id = $request->input('medida_id'); // Corregir el campo medida_id
         $producto->precio = $request->input('precio');
 
         if ($request->file('file')) {
             $url = Storage::put('productos', $request->file('file'));
-           // dd($url);
+            // dd($url);
             $producto->image = 'storage/' . $url;
-        }else{
+        } else {
             $producto->image = 'images/no-image.png';
         }
 
@@ -146,16 +162,48 @@ class ProductoController extends Controller
 
 
         $producto->save();
+        
 
         // Crear y guardar el registro de stock
         $stock = new Stock();
         $stock->producto_id = $producto->id;
         $stock->cantidad = $request->input('cantidad');
-        $stock->ubicacion = $request->input('ubicacion');
+        $stock->almacen_id = $request->input('almacen_id');
         $stock->minimo = $request->input('minimo');
         $stock->maximo = $request->input('maximo');
 
         $stock->save();
+
+         //---------------------------------------BITACORA---------------------------
+
+         $user = User::find($userId);
+
+         $ipUsuario = request()->ip();
+         Activity()
+             ->causedBy($user->id)
+             ->inLog($user->name)
+             ->performedOn($producto)
+             ->withProperties([
+                 'categoria_id' => $producto->categoria_id,
+                 'medida_id' => $producto->medida_id,
+                 'nombre_producto' => $producto->nombre,
+                 'descripcion_prod' => $producto->descripcion,
+                 'precio_prod' => $producto->precio,
+                 'barcode' => $producto->barcode,
+                 'marca' => $producto->marca,
+                 'image' => $producto->image,
+                 'empresa_id' => $producto->empresa_id,
+                 //stock
+                 'ubicacion_stock' => $stock->ubicacion,
+                 'cantidad_stock' => $stock->cantidad,
+                 'minimo_stock' => $stock->minimo,
+                 'maximo_stock' => $stock->maximo,
+                 'ip_pc' => $ipUsuario
+             ])
+             ->log('Producto '. $producto->nombre .' creado por: '.$user->name)
+         ;
+ 
+         /////////////////////////////////////////////////////////////////////////////
 
         return redirect()->route('productos.create')->with('info', 'Producto creado con éxito.');
     }
@@ -176,7 +224,6 @@ class ProductoController extends Controller
             ->where('users.id', $userId)
             ->select('*')->first();
 
-
         config(['adminlte.logo' => "<b>$datos->razon_social</b>"]);
         return view('inventario.producto.show', compact('producto', 'categoria', 'medida', 'stock'));
     }
@@ -187,10 +234,6 @@ class ProductoController extends Controller
     public function edit(Producto $producto)
     {
         //
-        $categorias = Categoria::where('delete_categoria', 1)->pluck('nombre', 'id');
-        $medidas = Medida::where('delete_medida', 1)->pluck('nombre', 'id');
-        $stock = Stock::where('producto_id', $producto->id)->first();
-
         $userId = Auth::id();
 
         $datos = User::join('empresa_clientes', 'empresa_clientes.id', '=', 'users.empresa_id')
@@ -198,8 +241,25 @@ class ProductoController extends Controller
             ->select('*')->first();
 
 
+        $categorias = Categoria::where('delete_categoria', 1)
+            ->where('id_empresa', $datos->empresa_id)
+            ->pluck('nombre', 'id');
+        $medidas = Medida::where('delete_medida', 1)
+            ->where('id_empresa', $datos->empresa_id)
+            ->pluck('nombre', 'id');
+        $stock = Stock::where('producto_id', $producto->id)
+            ->first();
+
+        $marcas = Marca::where('delete_marca', 1)
+            ->where('id_empresa', $datos->empresa_id)
+            ->pluck('nombre', 'id');
+
+        $almacens = Almacen::where('delete_almacen', 1)
+            ->where('id_empresa', $datos->empresa_id)
+            ->pluck('nombre', 'id');
+
         config(['adminlte.logo' => "<b>$datos->razon_social</b>"]);
-        return view('inventario.producto.edit', compact('producto', 'categorias', 'medidas', 'stock'));
+        return view('inventario.producto.edit', compact('producto', 'categorias', 'medidas', 'stock', 'marcas', 'almacens'));
     }
 
     /**
@@ -218,10 +278,11 @@ class ProductoController extends Controller
             'minimo' => 'required|integer|min:0',
             'maximo' => 'required|integer|min:0',
         ]);
+        $preProducto = $producto;
 
         $producto->nombre = $request->input('nombre');
         $producto->descripcion = $request->input('descripcion');
-        $producto->marca = $request->input('marca');
+        $producto->marca_id = $request->input('marca_id');
         $producto->categoria_id = $request->input('categoria_id');
         $producto->medida_id = $request->input('medida_id'); // Corregir el campo medida_id
         $producto->precio = $request->input('precio');
@@ -235,12 +296,58 @@ class ProductoController extends Controller
 
         // Crear y guardar el registro de stock
         $stock = Stock::where('producto_id', $producto->id)->first();
+        $preStock = $stock;
         $stock->cantidad = $request->input('cantidad');
-        $stock->ubicacion = $request->input('ubicacion');
+        $stock->almacen_id = $request->input('alamacen_id');
         $stock->minimo = $request->input('minimo');
         $stock->maximo = $request->input('maximo');
 
         $stock->save();
+
+        //-----------------------------BITACORA-----------------------------------------
+        $userId = Auth::id();
+        $user = User::find($userId);
+
+        $ipUsuario = request()->ip();
+        Activity()  
+            ->causedBy($user->id)
+            ->inLog($user->name)
+            ->performedOn($producto)
+            ->withProperties([
+                'preCategoria_id' => $preProducto->categoria_id,
+                'preMedida_id' => $preProducto->medida_id,
+                'preNombre_producto' => $preProducto->nombre,
+                'preDescripcion_prod' => $preProducto->descripcion,
+                'prePrecio_prod' => $preProducto->precio,
+                'preBarcode' => $preProducto->barcode,
+                'preMarca' => $preProducto->marca,
+                'preImage' => $preProducto->image,
+                'preEmpresa_id' => $preProducto->empresa_id,
+                //
+                'categoria_id' => $producto->categoria_id,
+                'medida_id' => $producto->medida_id,
+                'nombre_producto' => $producto->nombre,
+                'descripcion_prod' => $producto->descripcion,
+                'precio_prod' => $producto->precio,
+                'barcode' => $producto->barcode,
+                'marca' => $producto->marca,
+                'image' => $producto->image,
+                'empresa_id' => $producto->empresa_id,
+                //stock
+                'preUbicacion_stock' => $preStock->ubicacion,
+                'preCantidad_stock' => $preStock->cantidad,
+                'preMinimo_stock' => $preStock->minimo,
+                'preMaximo_stock' => $preStock->maximo,
+                //
+                'ubicacion_stock' => $stock->ubicacion,
+                'cantidad_stock' => $stock->cantidad,
+                'minimo_stock' => $stock->minimo,
+                'maximo_stock' => $stock->maximo,
+                'ip_pc' => $ipUsuario
+            ])
+            ->log('Producto Actualizado ' . $producto->nombre)
+        ;
+        //////////////////////////////////////////////////////////////////////////////
 
         return redirect()->route('productos.index')->with('info', 'Producto actualizado con éxito.');
     }
@@ -253,6 +360,24 @@ class ProductoController extends Controller
         //
         $producto->delete_producto = 0;
         $producto->save();
+
+        //------------------------------------BITACORA ---------------------------
+        $userId = Auth::id();
+        $user = User::find($userId);
+        
+        $ipUsuario = request()->ip();
+        Activity()
+            ->causedBy($user->id)
+            ->inLog($user->name)
+            ->performedOn($producto)
+            ->withProperties([
+                'nombre' => $producto->nombre,
+                'ip_pc' => $ipUsuario
+            ])
+            ->log('Producto: '.$producto->nombre.', ELIMINADO')
+        ;
+
+        ///////////////////////////////////////////////////////////////////////////
         return redirect()->route('productos.index')->with('info', 'Producto eliminado con éxito.');
     }
 

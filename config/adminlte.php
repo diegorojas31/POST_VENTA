@@ -339,6 +339,11 @@ return [
                     'icon' => 'fas fa-users',
                     'url'  => 'abrir_all_users',
                 ],
+                [
+                    'text' => 'Bitacora',
+                    'route'  => 'bitacora.index',
+                    'icon' => 'fas fa-book',
+                ],
             ],
         ],
         ['header' => 'ADMINISTRACION',
@@ -349,28 +354,28 @@ return [
             'can' =>'Admin',
             'submenu' => [
                 [
-                    'text' => 'Categorias',
-                    'url'  => 'dashboard/inventario/categorias',
-                ],
-                [
-                    'text' => 'Crear Categoria',
-                    'url'  => 'dashboard/inventario/categorias/create',
+                    'text' => 'Crear Producto',
+                    'url'  => 'dashboard/inventario/productos/create',
                 ],
                 [
                     'text' => 'Productos',
                     'url'  => 'dashboard/inventario/productos',
                 ],
                 [
-                    'text' => 'Crear Producto',
-                    'url'  => 'dashboard/inventario/productos/create',
+                    'text' => 'Categorias',
+                    'url'  => 'dashboard/inventario/categorias',
                 ],
                 [
                     'text' => 'Unidades Medida',
                     'url'  => 'dashboard/inventario/medidas',
                 ],
                 [
-                    'text' => 'Crear Unidades Medida',
-                    'url'  => 'dashboard/inventario/medidas/create',
+                    'text' => 'Marca',
+                    'url'  => 'dashboard/inventario/marcas',
+                ],
+                [
+                    'text' => 'Alamacen',
+                    'url'  => 'dashboard/inventario/almacenes',
                 ],
 
             ],

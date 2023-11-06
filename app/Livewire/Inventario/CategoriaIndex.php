@@ -16,21 +16,26 @@ class CategoriaIndex extends Component
 
     protected $paginationTheme = "bootstrap";
 
-    public $search = "Busqueda";
+    public $search = '';
 
-    public $contador = 1;
+    protected $listeners = ['render' => 'render'];
 
     public function render()
     {
 
         $userId = Auth::id();
-        
-        $datos = User::join('empresa_clientes','empresa_clientes.id','=','users.empresa_id')
-        ->where('users.id',$userId)
-        ->select('*')->first();
-       // dd($datos);
-       
-        $categorias = Categoria::where('delete_categoria', 1)->where('id_empresa',$datos->empresa_id)->orderBy('id', 'asc')->paginate(10);
+
+        $datos = User::join('empresa_clientes', 'empresa_clientes.id', '=', 'users.empresa_id')
+            ->where('users.id', $userId)
+            ->select('*')->first();
+        // dd($datos);
+
+        //$categorias = Categoria::where('delete_categoria', 1)->where('id_empresa',$datos->empresa_id)->orderBy('id', 'asc')->paginate(10);
+        $categorias = Categoria::where('delete_categoria', 1)
+            ->where('id_empresa', $datos->empresa_id)
+            ->where('nombre', 'like', '%' . $this->search . '%')
+            ->orderBy('id', 'asc')
+            ->paginate(10);
 
         return view('livewire.inventario.categoria-index', compact('categorias'));
     }

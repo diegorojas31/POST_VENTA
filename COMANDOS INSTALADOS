@@ -21,21 +21,7 @@ composer require laravelcollective/html
 composer require milon/barcode
 
 
-
-NOMBRE BASE DE DATOS :   postventasi2
-
-Usuario maestro :  diegoalexander
-
-contraseña : 123456789
-
-
-DB_CONNECTION=pgsql
-DB_HOST=postventasi2.cg6uiihs8ypu.us-east-1.rds.amazonaws.com
-DB_PORT=5432
-DB_DATABASE=postventasi2
-DB_USERNAME=diegoalexander
-DB_PASSWORD=123456789
-
+composer require dompdf/dompdf
 
 
 

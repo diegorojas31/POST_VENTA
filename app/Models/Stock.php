@@ -7,7 +7,12 @@ use Illuminate\Database\Eloquent\Model;
 
 class Stock extends Model
 {
-    protected $fillable = ['producto_id', 'ubicacion', 'cantidad', 'minimo', 'maximo','delete_stock'];
+    protected $fillable = ['producto_id', 'almacen_id', 'cantidad', 'minimo', 'maximo','delete_stock'];
 
     use HasFactory;
+
+    public function almacen()
+    {
+        return $this->belongsTo('App\Models\Almacen', 'almacen_id');
+    }
 }

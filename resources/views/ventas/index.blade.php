@@ -2,6 +2,10 @@
 
 @section('title', 'Dashboard')
 
+@section('content_top_nav_right')
+    @livewire('notifications')
+@endsection
+
 @section('content_header')
 
 
@@ -594,7 +598,7 @@
                             return {
                                 results: data.map(function(item) {
                                     return {
-                                        text: item.nombre + ' - ' + item.marca,
+                                        text: item.nombre ,
                                         disponible: item.cantidad,
                                         precio: item.precio,
                                         codigo: item.barcode,

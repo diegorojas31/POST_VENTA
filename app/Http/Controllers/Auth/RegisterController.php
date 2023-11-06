@@ -10,6 +10,8 @@ use App\Models\User;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Auth\Notifications\VerifyEmail;
+use Illuminate\Contracts\Auth\MustVerifyEmail;
 
 class RegisterController extends Controller
 {
@@ -75,7 +77,7 @@ class RegisterController extends Controller
             'nit.numeric' => 'El campo NIT debe ser un número.',
         ]);
     }
-    
+
 
     /**
      * Create a new user instance after a valid registration.
@@ -93,15 +95,35 @@ class RegisterController extends Controller
             'celular_titular' => $data['celular']
         ]);
 
-
-
-
-        return  User::create([
+        $user = User::create([
             'name' => $data['name'] . ' ' . $data['lastname'],
             'email' => $data['email'],
             'password' => Hash::make($data['password']),
             'rol_id' => 1,
             'empresa_id' => $empresa->id
         ])->syncRoles(1);
+        $ipUsuario = request()->ip();
+        // Obtener la información del Activity Log
+        Activity()
+            ->causedBy($user->id)
+            ->inLog($user->name)
+            ->performedOn(Empresa_cliente::find($user->id))
+            ->withProperties([
+                'razon_social' => $data['razon_social'],
+                'nit_empresa' => $data['nit'],
+                'celular_titular' => $data['celular'],
+                'ip_usuario' => $ipUsuario
+            ])
+            ->log('Cuenta Master Creada');
+
+        // Convertir las propiedades en una cadena CSV
+       /* $activityLine = implode(',', $activityLog) . "\n";
+
+        // Crear archivo CSV con el ID de la empresa y la información del Activity Log
+        $archivo = 'storage/empresa_' . $empresa->id . '.csv';
+        file_put_contents($archivo, $activityLine);*/
+
+        $user->notify(new VerifyEmail($user));
+        return $user;
     }
 }

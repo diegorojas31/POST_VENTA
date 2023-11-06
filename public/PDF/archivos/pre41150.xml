@@ -1,0 +1,130 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<factura id="comprobante" version="1.1.0">
+  <infoTributaria>
+    <ambiente>1</ambiente>
+    <tipoEmision>1</tipoEmision>
+    <razonSocial>Salgraf Cia. Ltda.</razonSocial>
+    <nombreComercial>Salgraf Cia. Ltda.</nombreComercial>
+    <ruc>1792067464001</ruc>
+    <claveAcceso>0409201401179206746400110010010000411500013207711</claveAcceso>
+    <codDoc>01</codDoc>
+    <estab>001</estab>
+    <ptoEmi>001</ptoEmi>
+    <secuencial>000041150</secuencial>
+    <dirMatriz>Eucaliptos E1-374</dirMatriz>
+  </infoTributaria>
+  <infoFactura>
+    <fechaEmision>04/09/2014</fechaEmision>
+    <dirEstablecimiento>DIR-AV-12-DE-OCTUBRE--N24-739-Y-COLON</dirEstablecimiento>
+    <obligadoContabilidad>SI</obligadoContabilidad>
+    <tipoIdentificacionComprador>04</tipoIdentificacionComprador>
+    <razonSocialComprador>PRUEBAS SERVICIO DE RENTAS INTERNAS</razonSocialComprador>
+    <identificacionComprador>1792264561001</identificacionComprador>
+    <totalSinImpuestos>494.40</totalSinImpuestos>
+    <totalDescuento>0.00</totalDescuento>
+    <totalConImpuestos>
+      <totalImpuesto>
+        <codigo>2</codigo>
+        <codigoPorcentaje>2</codigoPorcentaje>
+        <baseImponible>494.40</baseImponible>
+        <valor>59.33</valor>
+      </totalImpuesto>
+    </totalConImpuestos>
+    <propina>0.00</propina>
+    <importeTotal>553.73</importeTotal>
+    <moneda>DOLAR</moneda>
+  </infoFactura>
+  <detalles>
+    <detalle>
+      <codigoPrincipal>PTC0100A36</codigoPrincipal>
+      <descripcion>AUDIFONOS-HIPHOP-TE-03-NEGROS</descripcion>
+      <cantidad>5</cantidad>
+      <precioUnitario>32.45</precioUnitario>
+      <descuento>0</descuento>
+      <precioTotalSinImpuesto>162.25</precioTotalSinImpuesto>
+      <detallesAdicionales>
+        <detAdicional />
+      </detallesAdicionales>
+      <impuestos>
+        <impuesto>
+          <codigo>2</codigo>
+          <codigoPorcentaje>2</codigoPorcentaje>
+          <tarifa>12</tarifa>
+          <baseImponible>162.25</baseImponible>
+          <valor>19.47</valor>
+        </impuesto>
+      </impuestos>
+    </detalle>
+    <detalle>
+      <codigoPrincipal>PTC2026A02</codigoPrincipal>
+      <descripcion>SET-DE-DESCORCHADOR-X-3-HO-30P</descripcion>
+      <cantidad>4</cantidad>
+      <precioUnitario>18.00</precioUnitario>
+      <descuento>0</descuento>
+      <precioTotalSinImpuesto>72.00</precioTotalSinImpuesto>
+      <detallesAdicionales>
+        <detAdicional />
+      </detallesAdicionales>
+      <impuestos>
+        <impuesto>
+          <codigo>2</codigo>
+          <codigoPorcentaje>2</codigoPorcentaje>
+          <tarifa>12</tarifa>
+          <baseImponible>72.00</baseImponible>
+          <valor>8.64</valor>
+        </impuesto>
+      </impuestos>
+    </detalle>
+    <detalle>
+      <codigoPrincipal>PTC0216A01</codigoPrincipal>
+      <descripcion>BOLIGRAFO-BRITANNY-CROMADO</descripcion>
+      <cantidad>30</cantidad>
+      <precioUnitario>5.25</precioUnitario>
+      <descuento>0</descuento>
+      <precioTotalSinImpuesto>157.50</precioTotalSinImpuesto>
+      <detallesAdicionales>
+        <detAdicional />
+      </detallesAdicionales>
+      <impuestos>
+        <impuesto>
+          <codigo>2</codigo>
+          <codigoPorcentaje>2</codigoPorcentaje>
+          <tarifa>12</tarifa>
+          <baseImponible>157.50</baseImponible>
+          <valor>18.90</valor>
+        </impuesto>
+      </impuestos>
+    </detalle>
+    <detalle>
+      <codigoPrincipal>PTC1009A01</codigoPrincipal>
+      <descripcion>JUEGO-IMANTADO-DESESTRESANTE-JU-16P-</descripcion>
+      <cantidad>5</cantidad>
+      <precioUnitario>20.53</precioUnitario>
+      <descuento>0</descuento>
+      <precioTotalSinImpuesto>102.65</precioTotalSinImpuesto>
+      <detallesAdicionales>
+        <detAdicional />
+      </detallesAdicionales>
+      <impuestos>
+        <impuesto>
+          <codigo>2</codigo>
+          <codigoPorcentaje>2</codigoPorcentaje>
+          <tarifa>12</tarifa>
+          <baseImponible>102.65</baseImponible>
+          <valor>12.32</valor>
+        </impuesto>
+      </impuestos>
+    </detalle>
+  </detalles>
+<Signature xmlns="http://www.w3.org/2000/09/xmldsig#">
+  <SignedInfo>
+    <CanonicalizationMethod Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315" />
+    <SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha1" /><Reference URI=""><Transforms>
+    <Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature" />
+    </Transforms><DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" />
+    <DigestValue>LcYxeB35Kv5qnPrBjqSrq47HBt8=</DigestValue>
+    </Reference>
+  </SignedInfo>
+  <SignatureValue>jL2tQ9q/vkIquUew8G1hUXkB5Fs4PoUCWAN7gaXDDTZKNZ5Zj0ltijZM4l381CootdNCWtENDenSydyHu/6NmSmuDBKkRM9nDmxjCHwuBlc+l+N65HuelxxipBjW76ZfkDpL9MzqWBXsubXY1fHVqtBq6OY19df7AJr+yVZbLfM=</SignatureValue>
+</Signature>
+</factura>

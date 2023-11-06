@@ -16,14 +16,14 @@ class CategoriaController extends Controller
      */
     public function index()
     {
-        
+
         $userId = Auth::id();
-        
-        $datos = User::join('empresa_clientes','empresa_clientes.id','=','users.empresa_id')
-        ->where('users.id',$userId)
-        ->select('*')->first();
-        
-        
+
+        $datos = User::join('empresa_clientes', 'empresa_clientes.id', '=', 'users.empresa_id')
+            ->where('users.id', $userId)
+            ->select('*')->first();
+
+
         config(['adminlte.logo' => "<b>$datos->razon_social</b>"]);
         return view('inventario.categoria.index');
     }
@@ -34,12 +34,12 @@ class CategoriaController extends Controller
     public function create()
     {
         $userId = Auth::id();
-        
-        $datos = User::join('empresa_clientes','empresa_clientes.id','=','users.empresa_id')
-        ->where('users.id',$userId)
-        ->select('*')->first();
-        
-        
+
+        $datos = User::join('empresa_clientes', 'empresa_clientes.id', '=', 'users.empresa_id')
+            ->where('users.id', $userId)
+            ->select('*')->first();
+
+
         config(['adminlte.logo' => "<b>$datos->razon_social</b>"]);
         return view('inventario.categoria.create');
     }
@@ -56,24 +56,42 @@ class CategoriaController extends Controller
         ]);
 
         $userId = Auth::id();
-        
-        $datos = User::join('empresa_clientes','empresa_clientes.id','=','users.empresa_id')
-        ->where('users.id',$userId)
-        ->select('*')->first();
+
+        $datos = User::join('empresa_clientes', 'empresa_clientes.id', '=', 'users.empresa_id')
+            ->where('users.id', $userId)
+            ->select('*')->first();
 
         $categoria = new Categoria();
         $categoria->inventario_id = 1;
         $categoria->nombre = $request->input('nombre');
         $categoria->descripcion = $request->input('descripcion');
         $categoria->image = 'images/no-image.png';
-        $categoria->id_empresa=$datos->empresa_id;
+        $categoria->id_empresa = $datos->empresa_id;
 
         if ($request->file('file')) {
             $url = Storage::put('categorias', $request->file('file'));
-            $categoria->image = 'storage/'.$url;
+            $categoria->image = 'storage/' . $url;
         }
-        
+
         $categoria->save();
+
+        //------------------------BITACORA-------------------------
+        $user = User::find($userId);
+
+        $ipUsuario = request()->ip();
+        Activity()
+            ->causedBy($userId)
+            ->inLog($user->name)
+            ->performedOn($categoria)
+            ->withProperties([
+                'inventario_id' => $categoria->inventario_id,
+                'nombre' => $categoria->nombre,
+                'descripcion' => $categoria->descripcion,
+                'id_empresa' => $categoria->id_empresa,
+                'ip_pc' => $ipUsuario
+            ])
+            ->log('Categoria Creada: ' . $categoria->nombre);
+        //////////////////////////////////////////////////////////
 
         return redirect()->route('categorias.create')->with('info', 'Categoria creada con éxito.');
     }
@@ -84,12 +102,12 @@ class CategoriaController extends Controller
     public function show(Categoria $categoria)
     {
         $userId = Auth::id();
-        
-        $datos = User::join('empresa_clientes','empresa_clientes.id','=','users.empresa_id')
-        ->where('users.id',$userId)
-        ->select('*')->first();
-        
-        
+
+        $datos = User::join('empresa_clientes', 'empresa_clientes.id', '=', 'users.empresa_id')
+            ->where('users.id', $userId)
+            ->select('*')->first();
+
+
         config(['adminlte.logo' => "<b>$datos->razon_social</b>"]);
         return view('inventario.categoria.show', compact('categoria'));
     }
@@ -100,12 +118,12 @@ class CategoriaController extends Controller
     public function edit(Categoria $categoria)
     {
         $userId = Auth::id();
-        
-        $datos = User::join('empresa_clientes','empresa_clientes.id','=','users.empresa_id')
-        ->where('users.id',$userId)
-        ->select('*')->first();
-        
-        
+
+        $datos = User::join('empresa_clientes', 'empresa_clientes.id', '=', 'users.empresa_id')
+            ->where('users.id', $userId)
+            ->select('*')->first();
+
+
         config(['adminlte.logo' => "<b>$datos->razon_social</b>"]);
         return view('inventario.categoria.edit', compact('categoria'));
     }
@@ -120,16 +138,35 @@ class CategoriaController extends Controller
             'nombre' => 'required|max:50|unique:categorias,nombre,' . $categoria->id,
             'file' => 'image|mimes:jpeg,png,jpg|max:2048'
         ]);
-        
+        $preNombre = $categoria->nombre;
+
         $categoria->update($request->all());
 
         if ($request->file('file')) {
             $url = Storage::put('categorias', $request->file('file'));
-            $categoria->image = 'storage/'.$url;
+            $categoria->image = 'storage/' . $url;
         }
 
 
         $categoria->save();
+
+        //--------------------------------BITACORA-------------------------------
+        $userId = Auth::user()->id;
+        $user = User::find($userId);
+
+        $ipUsuario = request()->ip();
+        Activity()
+            ->causedBy($user->id)
+            ->inLog($user->name)
+            ->performedOn($categoria)
+            ->withProperties([
+                'pre_nombre' => $preNombre,
+                'nombre' => $categoria->nombre,
+                'image' => $categoria->image,
+                'ip_pc' => $ipUsuario
+            ])
+            ->log('Categoria Actualizada de "' . $preNombre . '" a "' . $categoria->nombre . '"');
+        /////////////////////////////////////////////////////////////////////////
 
         return redirect()->route('categorias.edit', $categoria)->with('info', 'La categoría se actualizó con éxito.');
     }
@@ -144,6 +181,21 @@ class CategoriaController extends Controller
         if ($categoria->productos->isEmpty()) {
             $categoria->delete_categoria = 0;
             $categoria->save();
+
+            //-------------------------BITACORA-------------------------
+            $userId = Auth::user()->id;
+            $user = User::find($userId);
+            $ipUsuario = request()->ip();
+            Activity()
+                ->causedBy($user->id)
+                ->inLog($user->name)
+                ->performedOn($categoria)
+                ->withProperties([
+                    'nombre' => $categoria->nombre,
+                    'ip_pc' => $ipUsuario
+                ])
+                ->log('Categoria: "' . $categoria->nombre . '", ELIMINADO');
+            /////////////////////////////////////////////////////////////
             return redirect()->route('categorias.index')->with('info', 'Categoria Eliminada con éxito.');
         } else {
             return redirect()->route('categorias.index')->with('error', 'No se puede eliminar una categoría con productos relacionados.');

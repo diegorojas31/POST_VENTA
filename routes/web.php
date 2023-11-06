@@ -10,6 +10,10 @@ use App\Http\Controllers\CajaAperturaController;
 use App\Http\Controllers\VentasController;
 use App\Http\Controllers\ClienteController;
 use App\Http\Controllers\MailController;
+use App\Http\Controllers\MarcaController;
+use App\Http\Controllers\AlmacenController;
+use App\Http\Controllers\NotificacionesController;
+use App\Http\Controllers\BitacoraController;
 
 
 /*
@@ -45,6 +49,7 @@ Route::group(['middleware' => ['auth','verified', 'can:Master']], function () {
     Route::get('abrir_all_users',[App\Http\Controllers\UsersController::class,'abrir_all_users'])->name('abrir_all_users');
     Route::get('user_delete/{id}',[App\Http\Controllers\UsersController::class,'user_delete'])->name('user_delete');
     Route::get('update_rol/{id}/{nuevo_rol}',[App\Http\Controllers\UsersController::class,'update_rol'])->name('update_rol');
+    Route::get('bitacora',[BitacoraController::class,'index'])->name('bitacora.index');
 });
 
 Route::group(['middleware' => ['auth','verified','can:Admin']], function () {
@@ -53,6 +58,8 @@ Route::group(['middleware' => ['auth','verified','can:Admin']], function () {
         Route::resource('dashboard/inventario/categorias', CategoriaController::class);
         Route::resource('dashboard/inventario/productos', ProductoController::class);
         Route::resource('dashboard/inventario/medidas', MedidaController::class);
+        Route::resource('/dashboard/inventario/marcas', MarcaController::class);
+        Route::resource('/dashboard/inventario/almacenes', AlmacenController::class);
         
      /** ---------------------MODULO DE CAJA------------------------------- */
     Route::get('/caja/index',[CajaController::class,'index'])->name('caja.index');
@@ -96,6 +103,7 @@ Route::middleware(['auth','verified'])->group(function () {
     //Route::get('allventas_caja/{caja_id}',[App\Http\Controllers\UsersController::class,'allventas_caja'])->name('allventas_caja');
     Route::get('/buscar_producto/{search}', [VentasController::class, 'buscar_producto'])->name('buscar_producto');
     Route::post('registrar_venta', [VentasController::class, 'registrar_venta'])->name('registrar_venta');
+    Route::get('/generarpdfventas/{idventa}', [VentasController::class, 'generarpdfventas'])->name('generarpdfventas');
 
 
     Route::get('/buscar-por-nit/{nit}', [ClienteController::class, 'buscarPorNit'])->name('buscarPorNit');
@@ -103,6 +111,8 @@ Route::middleware(['auth','verified'])->group(function () {
     Route::get('/crear_clientes',[ClienteController::class,'abrir_create_clientes'])->name('abrir_create_clientes');
     Route::post('crear_cliente',[ClienteController::class,'crear_cliente'])->name('crear_cliente');
     Route::delete('delete_cliente/{id}',[ClienteController::class,'destroy'])->name('clientes.destroy');
+
+    Route::get('/notificaciones', [NotificacionesController::class, 'index'])->name('notificaciones');
     
 
 });

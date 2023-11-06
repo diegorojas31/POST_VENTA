@@ -8,9 +8,16 @@ use Livewire\Component;
 use App\Models\Producto;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Empresa_cliente;
+use Livewire\WithPagination;
+use App\Models\Almacen;
+use App\Models\Marca;
 
 class ProductoIndex extends Component
 {
+  use WithPagination;
+
+  protected $paginationTheme = "bootstrap";
+
   public function render()
   {
     $userId = Auth::id();
@@ -29,6 +36,7 @@ class ProductoIndex extends Component
     $stocks = Stock::join('productos', 'productos.id', '=', 'stocks.producto_id')
       ->whereIn('productos.id', $productoIds)
       ->get();
+
     //  dd($productos , $stocks);
     return view('livewire.inventario.producto-index', compact('productos', 'stocks'));
   }

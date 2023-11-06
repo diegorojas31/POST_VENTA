@@ -68,6 +68,25 @@ class MedidaController extends Controller
         $medida->id_empresa = $datos->empresa_id;
 
         $medida->save();
+                //---------------------------------BITACORA-------------------------------
+                $user = User::find($userId);
+                
+                $ipUsuario = request()->ip();
+                Activity()
+                    ->causedBy($user->id)
+                    ->inLog($user->name)
+                    ->performedOn($medida)
+                    ->withProperties([
+                        'inventario_id' => $medida->inventario_id,
+                        'nombre' => $medida->nombre,
+                        'descripcion' => $medida->descripcion,
+                        'abreviatura' => $medida->abreviatura,
+                        'id_empresa' => $medida->id_empresa,
+                        'ip_pc' => $ipUsuario
+                    ])
+                    ->log('Nueva Medida creada: '.$medida->nombre)
+                ;
+                ////////////////////////////////////////////////////////////////////////////
 
         return redirect()->route('medidas.create')->with('info', 'Unidad de Medida creada con éxito.');
     }
@@ -107,7 +126,30 @@ class MedidaController extends Controller
             'descripcion' => 'max:150',
             'abreviatura' => 'required|max:5|unique:medidas,abreviatura,' . $medida->id
         ]);
+        $preMedida = $medida->nombre; 
         $medida->update($request->all());
+         //---------------------------------BITACORA------------------------
+         $userId = Auth::id();
+         $user = User::find($userId);
+         
+         $ipUsuario = request()->ip();
+         
+         Activity()
+             ->causedBy($user->id)
+             ->inLog($user->name)
+             ->performedOn($medida)
+             ->withProperties([
+                 'preMedida' => $preMedida->nombre,
+                 'preDescripcion' => $preMedida->descripcion,
+                 'preAbreviatura' => $preMedida->Abreviatura,
+                 'Medida' => $medida->nombre,
+                 'descripcion' => $medida->descripcion,
+                 'abreviatura' => $medida->abreviatura,
+                 'ip_pc' => $ipUsuario
+             ])
+             ->log('Medida Actualizado de "'.$preMedida.'" a "'.$medida->nombre.'"')
+         ;
+         ///////////////////////////////////////////////////////////////////
 
         return redirect()->route('medidas.edit', $medida)->with('info', 'La Unidad de medida se actualizó con éxito.');
     }
@@ -121,6 +163,23 @@ class MedidaController extends Controller
         if ($medida->productos->isEmpty()) {
             $medida->delete_medida = 0;
             $medida->save();
+
+                        //-----------------------BITACORA----------------------------
+                        $userId = Auth::id();
+                        $user = User::find($userId);
+                        
+                        $ipUsuario = request()->ip();
+                        Activity()
+                            ->causedBy($user->id)
+                            ->inLog($user->name)
+                            ->performedOn($medida)
+                            ->withProperties([
+                                'nombre' => $medida->nombre,
+                                'ip_pc' => $ipUsuario
+                            ])
+                            ->log('medida: '.$medida->nombre.', ELIMANADA')
+                        ;
+                        /////////////////////////////////////////////////////////////
             return redirect()->route('medidas.index')->with('info', 'Unidad de Medida Eliminada con éxito.');
         } else {
             return redirect()->route('medidas.index')->with('error', 'No se puede eliminar una Unidad de Medida con productos relacionados.');

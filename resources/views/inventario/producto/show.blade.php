@@ -3,6 +3,10 @@
 @section('title', 'Productos')
 <link rel="icon" href="{{ asset('vendor/adminlte/dist/img/LOGOPOSTVENTA.jpg') }}" type="image/x-icon" style="border-radius: 50%;">
 
+@section('content_top_nav_right')
+    @livewire('notifications')
+@endsection
+
 @section('content_header')
 @stop
 @section('content')
@@ -38,7 +42,7 @@
                                     </li>
                                     <li class="list-group-item">
                                         <span class="fa fa-tag"></span>
-                                        <b>Marca</b> <a class="float-right">{{ $producto->marca }}</a>
+                                        <b>Marca</b> <a class="float-right">{{ optional($producto->marca)->nombre ?? 'Sin marca' }}</a>
                                     </li>
                                 </ul>
                                 <span class="fa fa-barcode"></span>
@@ -57,7 +61,7 @@
                                             ({{ $medida->abreviatura }})</a>
                                     </li>
                                     <li class="list-group-item">
-                                        <b>Almacen</b> <a class="float-right">{{ $stock->ubicacion }}</a>
+                                        <b>Almacen</b> <a class="float-right">{{ optional($stock->almacen)->nombre ?? 'Sin almacén' }}</a>
                                     </li>
                                 </ul>
                         </div>

@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use Dompdf\Dompdf;
+use Dompdf\Options;
 use App\Models\Caja;
 use App\Models\User;
 use App\Models\Stock;
@@ -11,6 +13,7 @@ use App\Models\Producto;
 use App\Models\Cajaventa;
 use Illuminate\Http\Request;
 use App\Models\DetalleVentas;
+use App\Notifications\StockBajo;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 
@@ -39,7 +42,8 @@ class VentasController extends Controller
         return response()->json(['cajainfo' => $cajainfo, 'datoscaja' => $datoscaja]);
     }
 
-    public function allventas(){
+    public function allventas()
+    {
 
         $userId = Auth::id();
 
@@ -48,21 +52,19 @@ class VentasController extends Controller
             ->select('*')->first();
 
 
-            $ventas = Ventas::join('clientes', 'clientes.id', '=', 'ventas.id_cliente')
+        $ventas = Ventas::join('clientes', 'clientes.id', '=', 'ventas.id_cliente')
             ->join('cajaventas', 'cajaventas.id', '=', 'ventas.id_caja_venta')
-            ->join('users','users.id','=','cajaventas.id_usuario')
+            ->join('users', 'users.id', '=', 'cajaventas.id_usuario')
             ->join('cajas', 'cajaventas.id_caja', '=', 'cajas.id')
             ->join('empresa_clientes', 'cajas.id_empresa', '=', 'empresa_clientes.id')
             ->where('empresa_clientes.id', $datos->empresa_id)
-            ->select('*') // Cambia esto según las columnas que desees seleccionar
+            ->select('ventas.id as id_venta', '*') // Cambia esto según las columnas que desees seleccionar
             ->get();
-            //dd($ventas);
-            
-        
-            config(['adminlte.logo' => "<b>$datos->razon_social</b>"]);
-            return view('ventas.allventas')->with('datos', $datos)->with('ventas',$ventas);
+        //dd($ventas);
 
 
+        config(['adminlte.logo' => "<b>$datos->razon_social</b>"]);
+        return view('ventas.allventas')->with('datos', $datos)->with('ventas', $ventas);
     }
 
     public function buscar_producto($search)
@@ -103,7 +105,7 @@ class VentasController extends Controller
         $tipo_pago = $request->input('tipo_pago');
         $totalVenta = $request->input('totalVenta');
 
-        $id_cliente = Cliente::where('nit_cliente', $nit_cliente)->where('empresa_id',$datos->empresa_id)->value('id');
+        $id_cliente = Cliente::where('nit_cliente', $nit_cliente)->where('empresa_id', $datos->empresa_id)->value('id');
         if (!$id_cliente) {
             // Crea una nueva vent
 
@@ -115,7 +117,25 @@ class VentasController extends Controller
             $cliente->empresa_id = $datos->empresa_id;
             $cliente->save();
 
-            $id_cliente=$cliente->id;
+            //--------------------------------BITACORA-----------------------
+            
+            $user = User::find($userId);
+            $ipUsuario = request()->ip();
+            Activity()
+                ->causedBy($user->id)
+                ->inLog($user->name)
+                ->performedOn($cliente)
+                ->withProperties([
+                    'nit_cliente' => $cliente->nit_cliente,
+                    'nombre_cliente' => $cliente->nombre_cliente,
+                    'apellido_cliente' => $cliente->apellido_cliente,
+                    'ip_pc'=>$ipUsuario
+                ])
+                ->log('Cliente Creado: ' . $cliente->nombre_cliente . ' ' . $cliente->apellido_cliente);
+
+            /////////////////////////////////////////////////////////////////
+
+            $id_cliente = $cliente->id;
         }
 
 
@@ -144,11 +164,76 @@ class VentasController extends Controller
 
             Stock::where('producto_id', $productostock->id)
                 ->update(['cantidad' => DB::raw("cantidad - $cantidad_a_restar")]);
+
+            // Ahora, para obtener el nuevo valor de cantidad, puedes hacer una nueva consulta
+            $stock_new = Stock::where('producto_id', $productostock->id)->select('*')->first();
+            $producto_new = Producto::where('id', $productostock->id)->select('*')->first();
+
+            if ($stock_new->cantidad <= $stock_new->minimo) {
+
+                $id_administradores = User::where('rol_id', 1)->get();
+
+                foreach ($id_administradores as $administrador) {
+
+                    $administrador->notify(new StockBajo($producto_new, $stock_new));
+                }
+            }
         }
+        //---------------------------------------BITACORA---------------------------
+
+        $user = User::find($userId);
+        $ipUsuario = request()->ip();
+        Activity()
+            ->causedBy($user->id)
+            ->inLog($user->name)
+            ->performedOn($venta)
+            ->withProperties([
+                'monto_total' => $venta->montototal,
+                'nit_cliente' => $request->input('nit_cliente'),
+                'productos' => $productosJSON,
+
+                'ip_pc' => $ipUsuario
+            ])
+            ->log('Se realizo una venta por el usuario: ' . $user->name);
+
+        /////////////////////////////////////////////////////////////////////////////
 
         return response()->json([
             'mensaje' => 'Venta registrada con éxito',
             'Ventas' => $venta
         ]);
+    }
+    public function generarpdfventas($idventa)
+    {
+
+
+        $detalle_venta = DetalleVentas::join('productos', 'productos.id', '=', 'detalle_venta.id_producto')->join('ventas', 'ventas.id', '=', 'detalle_venta.id_venta')->where('detalle_venta.id_venta', $idventa)->select('*')->get();
+        $ventas = Ventas::join('clientes', 'clientes.id', '=', 'ventas.id_cliente')->where('ventas.id', $idventa)->select('*')->first();
+
+        //dd($detalle_venta,$ventas);
+
+
+        $options = new Options();
+        $options->set('chroot', realpath(''));
+        $options->set('defaultFont', 'Arial');
+
+        // Generar el HTML del boleto utilizando una vista
+        $html = view('ventas.detalle_ventapdf', compact('detalle_venta', 'ventas'))->render();
+
+        // Crear una instancia de Dompdf
+        $dompdf = new Dompdf($options);
+        $dompdf->setPaper('A4', 'portrait');
+
+        // Cargar el HTML del boleto
+        $dompdf->loadHtml($html);
+
+        // Renderizar el PDF
+        $dompdf->render();
+
+        // Generar el nombre del archivo PDF
+        $nombreArchivo = 'venta.pdf';
+
+        // Descargar el archivo PDF en el navegador
+        return $dompdf->stream($nombreArchivo);
     }
 }
