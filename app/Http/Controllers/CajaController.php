@@ -143,7 +143,7 @@ class CajaController extends Controller
             'delete_caja' => 0,
         ]);
                 //------------------------BITACORA------------------------------
-                $user = User::find($userId);
+                $user = User::find($userId->id);
                 $caja = Caja::find($id);
                 $ipUsuario = request()->ip();
                 Activity()
