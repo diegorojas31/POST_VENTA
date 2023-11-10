@@ -61,7 +61,7 @@ class CajaController extends Controller
         
         $usuario = User::find($userId); 
         $ipUsuario = request()->ip();
-        activity()
+        $activity= activity()
         ->performedOn($caja)
         ->causedBy($userId)
         ->inLog($usuario->name)
@@ -71,6 +71,10 @@ class CajaController extends Controller
         ])
         ->log('Nueva Caja creada: '.$caja->title_caja);
         ///////////////////////////////////////////////////////////////////
+        $idMaster = $caja->id_empresa;
+        $CSV = new FuncionController;
+        
+        $CSV->guardarEnCSV($activity, $idMaster);
 
         return redirect()->route('caja.show', $caja->id);
     }
@@ -117,7 +121,7 @@ class CajaController extends Controller
         //---------------------------BITACORA----------------------
         $ipUsuario = request()->ip();
         $user = User::find($userId);
-        Activity()
+        $activity=Activity()
             ->causedBy($userId) //id usuario
             ->inLog($user->name)  //nombre del usuario
             ->performedOn(Caja::find($caja->id)) //id de caja
@@ -129,6 +133,10 @@ class CajaController extends Controller
             ->log('Se actualizo la caja "'.$caja->title_caja.'" a "'.$request->nombrecaja.'"')
         ;
         ///////////////////////////////////////////////////////////
+        $idMaster = $datos->id_empresa;
+        $CSV = new FuncionController;
+        
+        $CSV->guardarEnCSV($activity, $idMaster);
 
 
         config(['adminlte.logo' => "<b>$datos->razon_social</b>"]);
@@ -138,6 +146,11 @@ class CajaController extends Controller
     {
 
         $userId = Auth::user();
+        
+
+        $datos = User::join('empresa_clientes', 'empresa_clientes.id', '=', 'users.empresa_id')
+            ->where('users.id', $userId->id)
+            ->select('*')->first();
 
         Caja::where('id', $id)->where('estado', 'inhabilitado')->update([
             'delete_caja' => 0,
@@ -146,7 +159,7 @@ class CajaController extends Controller
                 $user = User::find($userId->id);
                 $caja = Caja::find($id);
                 $ipUsuario = request()->ip();
-                Activity()
+                $activity= Activity()
                     ->causedBy($user->id)
                     ->inLog($user->name)   
                     ->performedOn($caja)
@@ -154,9 +167,14 @@ class CajaController extends Controller
                         'title_caja' => $caja->title_caja,
                         'ip_pc' => $ipUsuario
                     ])
-                    ->Log('Caja: '.$caja->name.', ELIMINADA')
+                    ->Log('Caja: '.$caja->title_caja.' ELIMINADA')
                 ;
                 /////////////////////////////////////////////////////////////////
+
+                $idMaster = $datos->id_empresa;
+                $CSV = new FuncionController;
+                
+                $CSV->guardarEnCSV($activity, $idMaster);
 
         return redirect()->route('caja.index');
         // DB::beginTransaction();

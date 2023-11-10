@@ -79,7 +79,7 @@ class CategoriaController extends Controller
         $user = User::find($userId);
 
         $ipUsuario = request()->ip();
-        Activity()
+        $activity=Activity()
             ->causedBy($userId)
             ->inLog($user->name)
             ->performedOn($categoria)
@@ -92,6 +92,11 @@ class CategoriaController extends Controller
             ])
             ->log('Categoria Creada: ' . $categoria->nombre);
         //////////////////////////////////////////////////////////
+
+        $idMaster = $datos->id_empresa;
+        $CSV = new FuncionController;
+        
+        $CSV->guardarEnCSV($activity, $idMaster);
 
         return redirect()->route('categorias.create')->with('info', 'Categoria creada con éxito.');
     }
@@ -155,7 +160,7 @@ class CategoriaController extends Controller
         $user = User::find($userId);
 
         $ipUsuario = request()->ip();
-        Activity()
+        $activity=Activity()
             ->causedBy($user->id)
             ->inLog($user->name)
             ->performedOn($categoria)
@@ -167,6 +172,11 @@ class CategoriaController extends Controller
             ])
             ->log('Categoria Actualizada de "' . $preNombre . '" a "' . $categoria->nombre . '"');
         /////////////////////////////////////////////////////////////////////////
+
+        $idMaster = $user->empresa_id;
+        $CSV = new FuncionController;
+        
+        $CSV->guardarEnCSV($activity, $idMaster);
 
         return redirect()->route('categorias.edit', $categoria)->with('info', 'La categoría se actualizó con éxito.');
     }
@@ -186,7 +196,7 @@ class CategoriaController extends Controller
             $userId = Auth::user()->id;
             $user = User::find($userId);
             $ipUsuario = request()->ip();
-            Activity()
+            $activity= Activity()
                 ->causedBy($user->id)
                 ->inLog($user->name)
                 ->performedOn($categoria)
@@ -196,6 +206,10 @@ class CategoriaController extends Controller
                 ])
                 ->log('Categoria: "' . $categoria->nombre . '", ELIMINADO');
             /////////////////////////////////////////////////////////////
+            $idMaster = $user->empresa_id;
+            $CSV = new FuncionController;
+            
+            $CSV->guardarEnCSV($activity, $idMaster);
             return redirect()->route('categorias.index')->with('info', 'Categoria Eliminada con éxito.');
         } else {
             return redirect()->route('categorias.index')->with('error', 'No se puede eliminar una categoría con productos relacionados.');

@@ -2,16 +2,19 @@
 
 namespace App\Http\Controllers\Auth;
 
-use App\Http\Controllers\Controller;
+use App\Models\User;
 use App\Models\Cargos;
 use App\Models\Empresa_cliente;
-use App\Providers\RouteServiceProvider;
-use App\Models\User;
-use Illuminate\Foundation\Auth\RegistersUsers;
+use Spatie\Permission\Models\Role;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Hash;
+use App\Providers\RouteServiceProvider;
+use Spatie\Permission\Models\Permission;
 use Illuminate\Support\Facades\Validator;
+use App\Http\Controllers\FuncionController;
 use Illuminate\Auth\Notifications\VerifyEmail;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Foundation\Auth\RegistersUsers;
 
 class RegisterController extends Controller
 {
@@ -95,16 +98,24 @@ class RegisterController extends Controller
             'celular_titular' => $data['celular']
         ]);
 
+        
+
+        $permissions = Permission::all();
+        $rol= Role::create(['name'=>'Master','id_empresa'=>$empresa->id]);
+        $rol->syncPermissions($permissions);
         $user = User::create([
             'name' => $data['name'] . ' ' . $data['lastname'],
             'email' => $data['email'],
             'password' => Hash::make($data['password']),
             'rol_id' => 1,
             'empresa_id' => $empresa->id
-        ])->syncRoles(1);
+        ])->syncRoles($rol->id);
+
+        $user->createAsStripeCustomer();
+
         $ipUsuario = request()->ip();
         // Obtener la información del Activity Log
-        Activity()
+        $activity= Activity()
             ->causedBy($user->id)
             ->inLog($user->name)
             ->performedOn(Empresa_cliente::find($user->id))
@@ -116,12 +127,10 @@ class RegisterController extends Controller
             ])
             ->log('Cuenta Master Creada');
 
-        // Convertir las propiedades en una cadena CSV
-       /* $activityLine = implode(',', $activityLog) . "\n";
-
-        // Crear archivo CSV con el ID de la empresa y la información del Activity Log
-        $archivo = 'storage/empresa_' . $empresa->id . '.csv';
-        file_put_contents($archivo, $activityLine);*/
+            $idMaster = $empresa->id;
+            $CSV = new FuncionController;
+            $CSV->nuevoArchivoCSV($idMaster);
+            $CSV->guardarEnCSV($activity, $idMaster);
 
         $user->notify(new VerifyEmail($user));
         return $user;

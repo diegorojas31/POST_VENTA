@@ -36,8 +36,10 @@ class UsersController extends Controller
         $datos = User::join('empresa_clientes', 'empresa_clientes.id', '=', 'users.empresa_id')
             ->where('users.id', $userId)
             ->select('*')->first();
+        
         $cargos = Cargos::select('*')->get();
-        $roles = Role::select('*')->get();
+        $roles = Role::where('roles.id_empresa',$datos->empresa_id)->select('*')->get();
+        
 
 
         config(['adminlte.logo' => "<b>$datos->razon_social</b>"]);
@@ -68,7 +70,8 @@ class UsersController extends Controller
             ->where('users.id', $userId)
             ->select('*')->first();
 
-        if ($datos->rol_id == 1) {
+            $roles = Role::where('roles.id', $datos->rol_id)->select('*')->first();
+        if ($roles->name == 'Master') {
             $datos_empresa = Empresa_cliente::where('empresa_clientes.id', $datos->empresa_id)->select('*')->first();
             config(['adminlte.logo' => "<b>$datos->razon_social</b>"]);
             return view('CRUD_USUARIO.edit_users')->with('datos', $datos)->with('datos_empresa', $datos_empresa);
@@ -130,7 +133,7 @@ class UsersController extends Controller
             $user = User::find($userId);
 
             $ipUsuario = request()->ip();
-            Activity()
+            $activity=Activity()
                 ->causedBy($user->id)
                 ->inLog($user->name)
                 ->performedOn($empleados)
@@ -140,8 +143,13 @@ class UsersController extends Controller
                     'ip_pc' => $ipUsuario
                 ])
                 ->log('Se volvio a habilitar el usuario del Empleado : ' . $usuario->name);
+                $idMaster = $user->empresa_id;
+                $CSV = new FuncionController;
+                
+                $CSV->guardarEnCSV($activity, $idMaster);
 
             ///////////////////////////////////////////////////////////////////////
+            
 
             return redirect()->route('abrir_crear_users');
         }
@@ -160,6 +168,7 @@ class UsersController extends Controller
         ]);
         $roles = $request->rol_id;
         $user->syncRoles($roles);
+        
 
 
         $empleados = Empleados::create([
@@ -174,7 +183,7 @@ class UsersController extends Controller
         $userauth = User::find($userId);
 
         $ipUsuario = request()->ip();
-        Activity()
+        $activity=Activity()
             ->causedBy($userauth->id)
             ->inLog($userauth->name)
             ->performedOn($empleados)
@@ -184,6 +193,10 @@ class UsersController extends Controller
                 'ip_pc' => $ipUsuario
             ])
             ->log('Se creo un nuevo Usuario empleado : ' . $user->name);
+            $idMaster = $userauth->empresa_id;
+            $CSV = new FuncionController;
+            
+            $CSV->guardarEnCSV($activity, $idMaster);
 
         ///////////////////////////////////////////////////////////////////////
 
@@ -210,7 +223,7 @@ class UsersController extends Controller
             $userId = Auth::id();
             $user = User::find($userId);
             $ipUsuario = request()->ip();
-            Activity()
+            $activity=Activity()
                 ->causedBy($userId)
                 ->inLog($user->name)
                 ->performedOn($user)
@@ -219,6 +232,10 @@ class UsersController extends Controller
                 ])
                 ->log('Usuario: '.$user->name.', cambio su contraseña')
             ;
+            $idMaster = $user->empresa_id;
+            $CSV = new FuncionController;
+            
+            $CSV->guardarEnCSV($activity, $idMaster);
 
             return response()->json(['mensaje' => 'Contraseña actualizada correctamente.']);
         } else {
@@ -229,7 +246,11 @@ class UsersController extends Controller
     {
 
         //-----ENTONCES LA CUENTA ES EMPRESARIAL----------//
-        if ($request->rol_id == 1) {
+        $userId = Auth::id();
+        $user = User::find($userId);
+        $roles = Role::where('roles.id', $user->rol_id)->select('*')->first();
+
+        if ($roles->name == 'Master') {
             $this->validate($request, [
                 'razon_social' => 'required|filled',
                 'nit' => 'required|numeric',
@@ -276,7 +297,7 @@ class UsersController extends Controller
                 //----------------------------------BITACORA--------------------------
                 
                 $ipUsuario = request()->ip();
-                Activity()
+                $activity=Activity()
                     ->causedBy($user->id)
                     ->inLog($user->name)
                     ->performedOn($usuario)
@@ -304,6 +325,11 @@ class UsersController extends Controller
                     ])
                     ->log('La cuenta empresarial de  : ' . $Empresa->razon_social . 'edito su perfil y modifico su correo')
                 ;
+                $idMaster = $usuario->empresa_id;
+                $CSV = new FuncionController;
+                
+                $CSV->guardarEnCSV($activity, $idMaster);
+                
     
                 ///////////////////////////////////////////////////////////////////////
                 return redirect()->route('abrir_edit_users');
@@ -323,7 +349,7 @@ class UsersController extends Controller
                         //----------------------------------BITACORA--------------------------
                 
                         $ipUsuario = request()->ip();
-                        Activity()
+                        $activity=Activity()
                             ->causedBy($user->id)
                             ->inLog($user->name)
                             ->performedOn($usuario)
@@ -351,6 +377,10 @@ class UsersController extends Controller
                             ])
                             ->log('La cuenta empresarial de  : ' . $Empresa->razon_social . 'edito su perfil sin modificar su correo')
                         ;
+                        $idMaster = $usuario->empresa_id;
+                        $CSV = new FuncionController;
+                        
+                        $CSV->guardarEnCSV($activity, $idMaster);
             
                         ///////////////////////////////////////////////////////////////////////
             return redirect()->route('abrir_edit_users');
@@ -390,7 +420,7 @@ class UsersController extends Controller
             ]);
              //------------------------BITACORA---------------------------
              $ipUsuario = request()->ip();
-             Activity()
+             $activity=Activity()
              ->causedBy($user->id)
              ->inLog($user->name)
              ->performedOn($empleados)
@@ -411,6 +441,10 @@ class UsersController extends Controller
              ])
              ->log('Se edito el perfil' . $usuario->name . 'y cambio su correo')
          ;
+         $idMaster = $preUser->empresa_id;
+         $CSV = new FuncionController;
+         
+         $CSV->guardarEnCSV($activity, $idMaster);
          ///////////////////////////////////////////////////////////
             return redirect()->route('abrir_edit_users');
         }
@@ -427,7 +461,7 @@ class UsersController extends Controller
         ]);
           //------------------------BITACORA---------------------------
           $ipUsuario = request()->ip();
-          Activity()
+          $activity=Activity()
           ->causedBy($user->id)
           ->inLog($user->name)
           ->performedOn($empleados)
@@ -448,6 +482,10 @@ class UsersController extends Controller
           ])
           ->log('Se edito el perfil' . $usuario->name . 'sin cambiar su correo')
       ;
+      $idMaster = $preUser->empresa_id;
+      $CSV = new FuncionController;
+      
+      $CSV->guardarEnCSV($activity, $idMaster);
       ///////////////////////////////////////////////////////////
         return redirect()->route('abrir_edit_users');
     }
@@ -467,7 +505,7 @@ class UsersController extends Controller
          $user1 = User::find($id);
          $empleados = Empleados::find($empleados);   
          $ipUsuario = request()->ip();
-         Activity()
+         $activity=Activity()
              ->causedBy($user->id)
              ->inLog($user->name)
              ->performedOn($empleados)
@@ -478,6 +516,10 @@ class UsersController extends Controller
              ])
              ->log('Usuario: '.$user1->name.', ELIMINADO')
          ;
+         $idMaster = $user->empresa_id;
+      $CSV = new FuncionController;
+      
+      $CSV->guardarEnCSV($activity, $idMaster);
          ///////////////////////////////////////////////////////////////////////
         return redirect()->route('abrir_all_users');
     }
@@ -497,7 +539,7 @@ class UsersController extends Controller
                 $user = User::find($userId);
         
                 $ipUsuario = request()->ip();
-                Activity()
+                $activity=Activity()
                     ->causedBy($user->id)
                     ->inLog($user->name)
                     ->performedOn($user)
@@ -508,6 +550,10 @@ class UsersController extends Controller
                     ])
                     ->log('rol "'.$preUser->rol_id.'" cambiado a rol "'.$user->rol_id.'"');
                 ;
+                $idMaster = $user->empresa_id;
+                $CSV = new FuncionController;
+                
+                $CSV->guardarEnCSV($activity, $idMaster);
                 //////////////////////////////////////////////////////////////////////////////
         return redirect()->route('abrir_all_users');
     }

@@ -2,10 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use Spatie\Activitylog\Models\Activity;
-use Illuminate\Support\Facades\Auth;
 use App\Models\User;
+use Illuminate\Http\Request;
+use Spatie\Permission\Models\Role;
+use Illuminate\Support\Facades\Auth;
+use Spatie\Activitylog\Models\Activity;
 
 class BitacoraController extends Controller
 {
@@ -17,24 +18,37 @@ class BitacoraController extends Controller
         $bitacora = '';
         $userId = Auth::id();
         $user = User::find($userId);
+        
+        
+        $roles = Role::where('roles.id', $user->rol_id)->select('*')->first();
 
-        if($user->rol_id == 1){
-            $bitacora = Activity::whereHas('causer', function($query) use($user) {
+        if ($roles->name == 'Master') {
+            $bitacora = Activity::whereHas('causer', function ($query) use ($user) {
                 $query->where('empresa_id', $user->empresa_id);
             })->get();
+            //-------------------------------LOGO ADMINLTE----------------
+            $datos = User::join('empresa_clientes', 'empresa_clientes.id', '=', 'users.empresa_id')
+                ->where('users.id', $userId)
+                ->select('*')->first();
+            config(['adminlte.logo' => "<b>$datos->razon_social</b>"]);
+            //-------------------------------------------------------------
+            //dd($datos);
+            return view('bitacora.bitacoraView')->with('datos', $datos)->with('bitacora', $bitacora);
         }
+    }
 
+    public function descargarBitacora()
+    {
+        $userId = Auth::id();
+        $user = User::find($userId);
+        $id_empresa = $user->empresa_id;
+        $archivo = "master_" . $id_empresa . ".csv";
+        $rutaArchivo = storage_path("Bitacora/{$archivo}");
 
-
-        //-------------------------------LOGO ADMINLTE----------------
-        $datos = User::join('empresa_clientes', 'empresa_clientes.id', '=', 'users.empresa_id')
-        ->where('users.id', $userId)
-        ->select('*')->first();
-        config(['adminlte.logo' => "<b>$datos->razon_social</b>"]);
-        //-------------------------------------------------------------
-        return $bitacora;
-        return view('bitacora.bitacoraView',compact('bitacora'));
-
+        return response()->download($rutaArchivo, $archivo, [
+            'Content-Type' => 'text/csv',
+            'Content-Disposition' => 'attachment',
+        ]);
     }
 
     /**

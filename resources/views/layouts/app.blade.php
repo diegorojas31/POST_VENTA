@@ -104,6 +104,12 @@
         <main class="py-4">
             @yield('content')
         </main>
+
+        @stack('modals')
+
+        @livewireScripts
+
+        @stack('js')
     </div>
 
     <!-- jQuery -->

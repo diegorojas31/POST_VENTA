@@ -2,10 +2,11 @@
 
 namespace App\Livewire\Inventario;
 
-use Livewire\Component;
-use App\Models\Medida;
-use Illuminate\Support\Facades\Auth;
 use App\Models\User;
+use App\Models\Medida;
+use Livewire\Component;
+use Illuminate\Support\Facades\Auth;
+use App\Http\Controllers\FuncionController;
 
 class MedidaCreate extends Component
 {
@@ -41,6 +42,31 @@ class MedidaCreate extends Component
         $medida->abreviatura = $this->abreviatura;
         $medida->id_empresa = $datos->empresa_id;
         $medida->save();
+
+          //---------------------------------BITACORA-------------------------------
+          $user = User::find($userId);
+                
+          $ipUsuario = request()->ip();
+          $activity=Activity()
+              ->causedBy($user->id)
+              ->inLog($user->name)
+              ->performedOn($medida)
+              ->withProperties([
+                  'inventario_id' => $medida->inventario_id,
+                  'nombre' => $medida->nombre,
+                  'descripcion' => $medida->descripcion,
+                  'abreviatura' => $medida->abreviatura,
+                  'id_empresa' => $medida->id_empresa,
+                  'ip_pc' => $ipUsuario
+              ])
+              ->log('Nueva Medida creada: '.$medida->nombre)
+          ;
+
+          $idMaster = $user->empresa_id;
+          $CSV = new FuncionController;
+          
+          $CSV->guardarEnCSV($activity, $idMaster);
+          ////////////////////////////////////////////////////////////////////////////
 
         $this->reset(['nombre', 'descripcion', 'abreviatura']);
         $this->dispatch('render');

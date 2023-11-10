@@ -72,7 +72,7 @@ class MedidaController extends Controller
                 $user = User::find($userId);
                 
                 $ipUsuario = request()->ip();
-                Activity()
+                $activity=Activity()
                     ->causedBy($user->id)
                     ->inLog($user->name)
                     ->performedOn($medida)
@@ -86,6 +86,11 @@ class MedidaController extends Controller
                     ])
                     ->log('Nueva Medida creada: '.$medida->nombre)
                 ;
+
+                $idMaster = $user->empresa_id;
+                $CSV = new FuncionController;
+                
+                $CSV->guardarEnCSV($activity, $idMaster);
                 ////////////////////////////////////////////////////////////////////////////
 
         return redirect()->route('medidas.create')->with('info', 'Unidad de Medida creada con éxito.');
@@ -134,7 +139,7 @@ class MedidaController extends Controller
          
          $ipUsuario = request()->ip();
          
-         Activity()
+         $activity=Activity()
              ->causedBy($user->id)
              ->inLog($user->name)
              ->performedOn($medida)
@@ -149,6 +154,10 @@ class MedidaController extends Controller
              ])
              ->log('Medida Actualizado de "'.$preMedida.'" a "'.$medida->nombre.'"')
          ;
+         $idMaster = $user->empresa_id;
+         $CSV = new FuncionController;
+         
+         $CSV->guardarEnCSV($activity, $idMaster);
          ///////////////////////////////////////////////////////////////////
 
         return redirect()->route('medidas.edit', $medida)->with('info', 'La Unidad de medida se actualizó con éxito.');
@@ -169,7 +178,7 @@ class MedidaController extends Controller
                         $user = User::find($userId);
                         
                         $ipUsuario = request()->ip();
-                        Activity()
+                        $activity=Activity()
                             ->causedBy($user->id)
                             ->inLog($user->name)
                             ->performedOn($medida)
@@ -180,6 +189,12 @@ class MedidaController extends Controller
                             ->log('medida: '.$medida->nombre.', ELIMANADA')
                         ;
                         /////////////////////////////////////////////////////////////
+
+                        $idMaster = $user->empresa_id;
+                        $CSV = new FuncionController;
+                        
+                        $CSV->guardarEnCSV($activity, $idMaster);
+
             return redirect()->route('medidas.index')->with('info', 'Unidad de Medida Eliminada con éxito.');
         } else {
             return redirect()->route('medidas.index')->with('error', 'No se puede eliminar una Unidad de Medida con productos relacionados.');

@@ -97,6 +97,10 @@
                                                     </div>
                                                     <button  type="submit"
                                                         class="btn btn-primary btn-uppercase btn-block">Login</button>
+                                                        <div class="d-flex justify-content-center mt-3">
+                                                            <a href="{{ route('password.request') }}">¿Olvidaste tu contraseña?</a>
+                                                        </div>
+                                                        
                                   
                                                 </div>
                                             </div>

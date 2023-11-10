@@ -74,7 +74,7 @@ public function abrir_create_clientes(){
              $userId = Auth::id();
              $user = User::find($userId);
              
-             Activity()
+             $activity=Activity()
                  ->causedBy($user->id)
                  ->inLog($user->name)
                  ->performedOn($cliente)
@@ -85,6 +85,10 @@ public function abrir_create_clientes(){
                  ])
                  ->log('Cliente Eliminado: '.$cliente->nombre_cliente.' '.$cliente->apellido_cliente)
              ;
+             $idMaster = $user->empresa_id;
+             $CSV = new FuncionController;
+             
+             $CSV->guardarEnCSV($activity, $idMaster);
              
              /////////////////////////////////////////////////////////////////
             
@@ -129,7 +133,7 @@ public function abrir_create_clientes(){
          $userId = Auth::id();
          $user = User::find($userId);
          $ipUsuario = request()->ip();
-         Activity()
+         $activity=Activity()
              ->causedBy($user->id)
              ->inLog($user->name)
              ->performedOn($cliente)
@@ -141,6 +145,11 @@ public function abrir_create_clientes(){
              ])
              ->log('Cliente Creado: '.$cliente->nombre_cliente.' '.$cliente->apellido_cliente)
          ;
+
+         $idMaster = $user->empresa_id;
+         $CSV = new FuncionController;
+        
+         $CSV->guardarEnCSV($activity, $idMaster);
          
          /////////////////////////////////////////////////////////////////
 

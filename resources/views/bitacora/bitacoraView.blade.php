@@ -8,7 +8,287 @@
 @stop
 
 @section('content')
-   
+<div class="contactapp-wrap">
+
+    <div class="contactapp-content">
+        <div class="contactapp-detail-wrap">
+            <header class="contact-header">
+                <div class="d-flex align-items-center">
+                    <div class="dropdown">
+                        <a class="contactapp-title dropdown-toggle link-dark" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
+                            <h1>Empleados</h1>
+                        </a>
+
+                    </div>
+                    <div class="dropdown ms-3">
+                        <a href="{{ route('descargar.bitacora') }}" class="btn btn-sm btn-outline-secondary flex-shrink-0" id="imprimir_bitacora">Imprimir Bitacora</a>
+                    </div>
+                    
+                </div>
+
+                
+            </header>
+            <div class="contact-body">
+                <div data-simplebar class="nicescroll-bar">
+                    
+
+                    <div class="contact-list-view">
+                        <table id="datable_1" class="table nowrap w-100 mb-5">
+                            <thead>
+                                <tr>
+
+                                    <th>Action</th>
+                                    <th>Usuario</th>
+                                    <th>Propiedades</th>
+
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach($bitacora as $bitacora)
+                                <tr>
+
+                                    <td>
+                                        <div class="media align-items-center">
+                    
+                                            <div class="media-body">
+                                                <span class="d-block text-high-em">{{ $bitacora['description'] }}</span> 
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td class="text-truncate">{{ $bitacora['log_name'] }}</td>
+                                    <td>{{ $bitacora['properties'] }}</td>
+                                    
+                                
+                                </tr>
+                            @endforeach
+
+
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Edit Info -->
+        <div id="add_new_contact" class="modal fade add-new-contact" tabindex="-1" role="dialog" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+                <div class="modal-content">
+                    <div class="modal-body">
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">×</span>
+                        </button>
+                        <h5 class="mb-5">Create New Conatct</h5>
+                        <form>
+                            <div class="row gx-3">
+                                <div class="col-sm-2 form-group">
+                                    <div class="dropify-square">
+                                        <input type="file"  class="dropify-1"/>
+                                    </div>
+                                </div>
+                                <div class="col-sm-10 form-group">
+                                    <textarea class="form-control mnh-100p" rows="4" placeholder="Add Biography"></textarea>
+                                </div>
+                            </div>
+                            <div class="title title-xs title-wth-divider text-primary text-uppercase my-4"><span>Basic Info</span></div>
+                            <div class="row gx-3">
+                                <div class="col-sm-4">
+                                    <div class="form-group">
+                                        <label class="form-label">First Name</label>
+                                        <input class="form-control" type="text"/>
+                                    </div>
+                                </div>
+                                <div class="col-sm-4">
+                                    <div class="form-group">
+                                        <label class="form-label">Middle Name</label>
+                                        <input class="form-control" type="text"/>
+                                    </div>
+                                </div>
+                                <div class="col-sm-4">
+                                    <div class="form-group">
+                                        <label class="form-label">Last Name</label>
+                                        <input class="form-control" type="text"/>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row gx-3">
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <label class="form-label">Email ID</label>
+                                        <input class="form-control" type="text"/>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <label class="form-label">Phone</label>
+                                        <input class="form-control" type="text"/>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row gx-3">
+                                <div class="col-sm-4">
+                                    <div class="form-group">
+                                        <label class="form-label">City</label>
+                                        <select class="form-select">
+                                            <option selected="">--</option>
+                                            <option value="1">One</option>
+                                            <option value="2">Two</option>
+                                            <option value="3">Three</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-sm-4">
+                                    <div class="form-group">
+                                        <label class="form-label">State</label>
+                                        <select class="form-select">
+                                            <option selected="">--</option>
+                                            <option value="1">One</option>
+                                            <option value="2">Two</option>
+                                            <option value="3">Three</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-sm-4">
+                                    <div class="form-group">
+                                        <label class="form-label">Country</label>
+                                        <select class="form-select">
+                                            <option selected="">--</option>
+                                            <option value="1">One</option>
+                                            <option value="2">Two</option>
+                                            <option value="3">Three</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="title title-xs title-wth-divider text-primary text-uppercase my-4"><span>Company Info</span></div>
+                            <div class="row gx-3">
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <label class="form-label">Company Name</label>
+                                        <input class="form-control" type="text"/>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <label class="form-label">Designation</label>
+                                        <input class="form-control" type="text"/>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <label class="form-label">Website</label>
+                                        <input class="form-control" type="text"/>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <label class="form-label">Work Phone</label>
+                                        <input class="form-control" type="text"/>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="title title-xs title-wth-divider text-primary text-uppercase my-4"><span>Additional Info</span></div>
+                            <div class="row gx-3">
+                                <div class="col-sm-12">
+                                    <div class="form-group">
+                                        <label class="form-label">Tags</label>
+                                        <select id="input_tags_2" class="form-control" multiple="multiple">
+                                        </select>
+                                        <small class="form-text text-muted">
+                                           You can add upto 4 tags per contact
+                                        </small>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row gx-3">
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <input class="form-control" type="text" placeholder="Facebook"/>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <input class="form-control" type="text" placeholder="Twitter"/>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <input class="form-control" type="text" placeholder="LinkedIn"/>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <input class="form-control" type="text" placeholder="Gmail"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer align-items-center">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Discard</button>
+                        <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Create Contact</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- /Edit Info -->
+        
+        <!-- Add Label -->
+        <div id="add_new_label" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-sm" role="document">
+                <div class="modal-content">
+                    <div class="modal-body">
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">×</span>
+                        </button>
+                        <h6 class="text-uppercase fw-bold mb-3">Add Label</h6>
+                        <form>
+                            <div class="row gx-3">
+                                <div class="col-sm-12">
+                                    <div class="form-group">
+                                        <input class="form-control" type="text" placeholder="Label Name"/>
+                                    </div>
+                                </div>
+                            </div>
+                            <button type="button" class="btn btn-primary float-end" data-bs-dismiss="modal">Add</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Add Label -->
+        
+        <!-- Add Tag -->
+        <div id="add_new_tag" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-sm" role="document">
+                <div class="modal-content">
+                    <div class="modal-body">
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">×</span>
+                        </button>
+                        <h6 class="text-uppercase fw-bold mb-3">Add Tag</h6>
+                        <form>
+                            <div class="row gx-3">
+                                <div class="col-sm-12">
+                                    <div class="form-group">
+                                        <select id="input_tags_3" class="form-control" multiple="multiple">
+                                            <option selected="selected">Collaborator</option>
+                                            <option selected="selected">Designer</option>
+                                            <option selected="selected">React Developer</option>
+                                            <option selected="selected">Promotion</option>
+                                            <option selected="selected">Advertisement</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <button type="button" class="btn btn-primary float-end" data-bs-dismiss="modal">Add</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Add Tag -->
+    </div>
+</div>
 
 @stop
 

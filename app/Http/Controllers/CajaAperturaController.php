@@ -11,13 +11,14 @@ use Illuminate\Support\Facades\Redirect;
 class CajaAperturaController extends Controller
 {
     public function index(){
-        $cajas = Caja::where('delete_caja', 1)->get();
+        
            
         $userId = Auth::id();
         
         $datos = User::join('empresa_clientes','empresa_clientes.id','=','users.empresa_id')
         ->where('users.id',$userId)
         ->select('*')->first();
+        $cajas = Caja::where('delete_caja', 1)->where('id_empresa', $datos->empresa_id)->get();
         
         
         config(['adminlte.logo' => "<b>$datos->razon_social</b>"]);

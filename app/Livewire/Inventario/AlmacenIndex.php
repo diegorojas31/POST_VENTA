@@ -2,11 +2,12 @@
 
 namespace App\Livewire\Inventario;
 
-use Livewire\Component;
-use App\Models\Almacen;
-use Illuminate\Support\Facades\Auth;
 use App\Models\User;
+use App\Models\Almacen;
+use Livewire\Component;
 use Livewire\WithPagination;
+use Illuminate\Support\Facades\Auth;
+use App\Http\Controllers\FuncionController;
 
 class AlmacenIndex extends Component
 {
@@ -47,7 +48,7 @@ class AlmacenIndex extends Component
                         $userId = Auth::user()->id;
                         $user = User::find($userId);
                         $ipUsuario = request()->ip();
-                        Activity()
+                        $activity=Activity()
                             ->causedBy($user->id)
                             ->inLog($user->name)
                             ->performedOn($almacen)
@@ -58,6 +59,10 @@ class AlmacenIndex extends Component
                             ->log('Categoria: "'.$almacen->nombre.'", ELIMINADO')
                         ;
                         /////////////////////////////////////////////////////////////
+                        $idMaster = $user->empresa_id;
+                        $CSV = new FuncionController;
+                        
+                        $CSV->guardarEnCSV($activity, $idMaster);
             session()->flash('success', 'Almacen eliminado exitosamente.');
         }
     }

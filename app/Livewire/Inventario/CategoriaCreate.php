@@ -2,12 +2,13 @@
 
 namespace App\Livewire\Inventario;
 
+use App\Models\User;
 use Livewire\Component;
 use App\Models\Categoria;
-use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Facades\Auth;
-use App\Models\User;
 use Livewire\WithFileUploads;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
+use App\Http\Controllers\FuncionController;
 
 class CategoriaCreate extends Component
 {
@@ -53,6 +54,29 @@ class CategoriaCreate extends Component
         }
 
         $categoria->save();
+
+         //------------------------BITACORA-------------------------
+         $user = User::find($userId);
+
+         $ipUsuario = request()->ip();
+         $activity=Activity()
+             ->causedBy($userId)
+             ->inLog($user->name)
+             ->performedOn($categoria)
+             ->withProperties([
+                 'inventario_id' => $categoria->inventario_id,
+                 'nombre' => $categoria->nombre,
+                 'descripcion' => $categoria->descripcion,
+                 'id_empresa' => $categoria->id_empresa,
+                 'ip_pc' => $ipUsuario
+             ])
+             ->log('Categoria Creada: ' . $categoria->nombre);
+         //////////////////////////////////////////////////////////
+ 
+         $idMaster = $user->empresa_id;
+         $CSV = new FuncionController;
+         
+         $CSV->guardarEnCSV($activity, $idMaster);
 
         $this->reset(['nombre', 'descripcion', 'file']);
         $this->dispatch('render');

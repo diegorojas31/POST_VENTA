@@ -179,7 +179,7 @@ class ProductoController extends Controller
          $user = User::find($userId);
 
          $ipUsuario = request()->ip();
-         Activity()
+         $activity=Activity()
              ->causedBy($user->id)
              ->inLog($user->name)
              ->performedOn($producto)
@@ -190,7 +190,7 @@ class ProductoController extends Controller
                  'descripcion_prod' => $producto->descripcion,
                  'precio_prod' => $producto->precio,
                  'barcode' => $producto->barcode,
-                 'marca' => $producto->marca,
+                 'marca' => $producto->marca_id,
                  'image' => $producto->image,
                  'empresa_id' => $producto->empresa_id,
                  //stock
@@ -202,6 +202,10 @@ class ProductoController extends Controller
              ])
              ->log('Producto '. $producto->nombre .' creado por: '.$user->name)
          ;
+         $idMaster = $user->empresa_id;
+         $CSV = new FuncionController;
+         
+         $CSV->guardarEnCSV($activity, $idMaster);
  
          /////////////////////////////////////////////////////////////////////////////
 
@@ -309,7 +313,7 @@ class ProductoController extends Controller
         $user = User::find($userId);
 
         $ipUsuario = request()->ip();
-        Activity()  
+        $activity=Activity()  
             ->causedBy($user->id)
             ->inLog($user->name)
             ->performedOn($producto)
@@ -330,7 +334,7 @@ class ProductoController extends Controller
                 'descripcion_prod' => $producto->descripcion,
                 'precio_prod' => $producto->precio,
                 'barcode' => $producto->barcode,
-                'marca' => $producto->marca,
+                'marca' => $producto->marca_id,
                 'image' => $producto->image,
                 'empresa_id' => $producto->empresa_id,
                 //stock
@@ -347,6 +351,10 @@ class ProductoController extends Controller
             ])
             ->log('Producto Actualizado ' . $producto->nombre)
         ;
+        $idMaster = $user->empresa_id;
+        $CSV = new FuncionController;
+        
+        $CSV->guardarEnCSV($activity, $idMaster);
         //////////////////////////////////////////////////////////////////////////////
 
         return redirect()->route('productos.index')->with('info', 'Producto actualizado con éxito.');
@@ -366,7 +374,7 @@ class ProductoController extends Controller
         $user = User::find($userId);
         
         $ipUsuario = request()->ip();
-        Activity()
+        $activity=Activity()
             ->causedBy($user->id)
             ->inLog($user->name)
             ->performedOn($producto)
@@ -376,6 +384,10 @@ class ProductoController extends Controller
             ])
             ->log('Producto: '.$producto->nombre.', ELIMINADO')
         ;
+        $idMaster = $user->empresa_id;
+        $CSV = new FuncionController;
+        
+        $CSV->guardarEnCSV($activity, $idMaster);
 
         ///////////////////////////////////////////////////////////////////////////
         return redirect()->route('productos.index')->with('info', 'Producto eliminado con éxito.');

@@ -15,6 +15,7 @@ use Illuminate\Http\Request;
 use App\Models\DetalleVentas;
 use App\Notifications\StockBajo;
 use Illuminate\Support\Facades\DB;
+use Spatie\Permission\Models\Role;
 use Illuminate\Support\Facades\Auth;
 
 class VentasController extends Controller
@@ -29,7 +30,7 @@ class VentasController extends Controller
             ->select('*')->first();
 
         $caja = Cajaventa::join('cajas', 'cajas.id', '=', 'cajaventas.id_caja')->where('cajaventas.id', $cajaventa_id)->select('cajaventas.id as cajaventa_id', '*')->first();
-
+        
 
         config(['adminlte.logo' => "<b>$datos->razon_social</b>"]);
         return view('ventas.index')->with('datos', $datos)->with('caja', $caja);
@@ -121,7 +122,7 @@ class VentasController extends Controller
             
             $user = User::find($userId);
             $ipUsuario = request()->ip();
-            Activity()
+            $activity=Activity()
                 ->causedBy($user->id)
                 ->inLog($user->name)
                 ->performedOn($cliente)
@@ -133,6 +134,10 @@ class VentasController extends Controller
                 ])
                 ->log('Cliente Creado: ' . $cliente->nombre_cliente . ' ' . $cliente->apellido_cliente);
 
+                $idMaster = $user->empresa_id;
+                $CSV = new FuncionController;
+                
+                $CSV->guardarEnCSV($activity, $idMaster);
             /////////////////////////////////////////////////////////////////
 
             $id_cliente = $cliente->id;
@@ -171,7 +176,9 @@ class VentasController extends Controller
 
             if ($stock_new->cantidad <= $stock_new->minimo) {
 
-                $id_administradores = User::where('rol_id', 1)->get();
+                
+
+                $id_administradores = User::where('users.empresa_id', $datos->empresa_id)->get();
 
                 foreach ($id_administradores as $administrador) {
 
@@ -183,7 +190,7 @@ class VentasController extends Controller
 
         $user = User::find($userId);
         $ipUsuario = request()->ip();
-        Activity()
+        $activity=Activity()
             ->causedBy($user->id)
             ->inLog($user->name)
             ->performedOn($venta)
@@ -196,6 +203,10 @@ class VentasController extends Controller
             ])
             ->log('Se realizo una venta por el usuario: ' . $user->name);
 
+            $idMaster = $user->empresa_id;
+            $CSV = new FuncionController;
+            
+            $CSV->guardarEnCSV($activity, $idMaster);
         /////////////////////////////////////////////////////////////////////////////
 
         return response()->json([

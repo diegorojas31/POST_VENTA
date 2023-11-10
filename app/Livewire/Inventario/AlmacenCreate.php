@@ -2,10 +2,11 @@
 
 namespace App\Livewire\Inventario;
 
-use Livewire\Component;
-use App\Models\Almacen;
-use Illuminate\Support\Facades\Auth;
 use App\Models\User;
+use App\Models\Almacen;
+use Livewire\Component;
+use Illuminate\Support\Facades\Auth;
+use App\Http\Controllers\FuncionController;
 
 class AlmacenCreate extends Component
 {
@@ -41,7 +42,7 @@ class AlmacenCreate extends Component
                 $user = User::find($userId);
                 
                 $ipUsuario = request()->ip();
-                Activity()
+                $activity=Activity()
                     ->causedBy($userId)
                     ->inLog($user->name)
                     ->performedOn($almacen)
@@ -54,6 +55,10 @@ class AlmacenCreate extends Component
                     ])
                     ->log('Almacen Creado: '. $almacen->nombre)
                 ;
+                $idMaster = $user->empresa_id;
+                $CSV = new FuncionController;
+                
+                $CSV->guardarEnCSV($activity, $idMaster);
                 //////////////////////////////////////////////////////////
 
         $this->reset(['nombre', 'descripcion']);

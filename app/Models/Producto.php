@@ -19,11 +19,16 @@ class Producto extends Model
 
     public function medida()
     {
-        return $this->belongTo('App\Models\Medida');
+        return $this->belongsTo('App\Models\Medida', 'medida_id');
     }
 
     public function marca()
     {
         return $this->belongsTo('App\Models\Marca', 'marca_id');
     }    
+
+    public function stock()
+    {
+        return $this->hasOne('App\Models\Stock');
+    }
 }

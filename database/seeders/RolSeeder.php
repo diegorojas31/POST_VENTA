@@ -15,12 +15,20 @@ class RolSeeder extends Seeder
      */
     public function run(): void
     {
-      $Master=  Role::create(['name'=>'Master']);
+    /*  $Master=  Role::create(['name'=>'Master']);
       $Administrador=  Role::create(['name'=>'Administrador']);
-      $Empleado=  Role::create(['name'=>'Empleado']);
+      $Empleado=  Role::create(['name'=>'Empleado']);*/
+     // $Master=  Role::create(['name'=>'Master']);
 
-      Permission::create(['name'=>'Master'])->syncRoles([$Master]);
-      Permission::create(['name'=>'Admin'])->syncRoles([$Master,$Administrador]);
-      Permission::create(['name'=>'Empleado'])->syncRoles([$Master,$Administrador,$Empleado]);
+      Permission::create(['name'=>'Master']);
+
+      Permission::create(['name'=>'Sucursales']);
+      Permission::create(['name'=>'Inventarios']);
+      Permission::create(['name'=>'Caja']);
+      Permission::create(['name'=>'Ventas y Clientes']);
+
+      
+      
+  
     }
 }

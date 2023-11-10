@@ -150,7 +150,7 @@ return [
 
     'layout_topnav' => null,
     'layout_boxed' => null,
-    'layout_fixed_sidebar' => null,
+    'layout_fixed_sidebar' => true,
     'layout_fixed_navbar' => null,
     'layout_fixed_footer' => null,
     'layout_dark_mode' => null,
@@ -339,19 +339,61 @@ return [
                     'icon' => 'fas fa-users',
                     'url'  => 'abrir_all_users',
                 ],
+
+            ],
+        ],
+        [
+            'text' => 'Gestion Roles',
+            'icon' => 'fas fa-fw fa-user',
+            'can' =>'Master',
+            'submenu' => [
                 [
-                    'text' => 'Bitacora',
-                    'route'  => 'bitacora.index',
-                    'icon' => 'fas fa-book',
+                    'text' => 'Crear Roles',
+                    'icon' => 'fas fa-user-plus',
+                    'url'  => 'abrir_crear_roles',
+                ],
+                [
+                    'text' => 'All Roles',
+                    'icon' => 'fas fa-user-plus',
+                    'url'  => 'all_roles',
                 ],
             ],
         ],
-        ['header' => 'ADMINISTRACION',
-        'can' =>'Admin'],
+        [
+            'text' => 'Suscripciones',
+            'icon' => 'fas fa-fw fa-user',
+            'can' =>'Master',
+            'url'  => 'abrir_suscripciones',
+            'text' => 'Plan Suscripciones',
+        ],
+        [
+            'text'    => 'Reportes',
+            'icon'    => 'fa fa-file-pdf',
+            'submenu' => [
+                [
+                    'text' => 'Reporte de Stock',
+                    'url' => 'reportes/stock',
+                ],
+               /* [
+                    'text'    => 'Reporte de Ventas',
+                    'url'     => 'reportes/venta',
+                ],*/
+
+
+
+            ],
+        ],
+        [
+            'text' => 'Bitacora',
+            'route'  => 'bitacora.index',
+            'icon' => 'fas fa-book',
+            'can' =>'Master',
+        ],
+        ['header' => 'ADMINISTRACION'],
         [
             'text' => 'Inventario',
             'icon' => 'fas fa-cubes',
-            'can' =>'Admin',
+            'can' =>'Inventarios',
             'submenu' => [
                 [
                     'text' => 'Crear Producto',
@@ -383,7 +425,7 @@ return [
         [
             'text' => 'Mis Ventas',
             'icon' => 'fas fa-cubes',
-            'can' =>'Admin',
+            'can' =>'Ventas y Clientes',
             'submenu' => [
                 [
                     'text' => 'All ventas',
@@ -396,7 +438,7 @@ return [
         [
             'text' => 'Cajas',
             'icon' => 'fas fa-fax',
-            'can' =>'Admin',
+            'can' =>'Caja',
             'submenu' => [
                 [
                     'text' => 'All Cajas',
@@ -409,6 +451,7 @@ return [
         [
             'text'    => 'Clientes ',
             'icon'    => 'fas fa-street-view',
+            'can' => 'Ventas y Clientes',
             'submenu' => [
                 [
                     'text'    => 'All Clientes',
@@ -425,6 +468,7 @@ return [
         [
             'text'    => 'Ventas (Proximamente)',
             'icon'    => 'fas fa-shopping-cart',
+            'can' => 'Ventas y Clientes',
             'submenu' => [
                 [
                     'text'    => 'Vender',

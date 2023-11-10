@@ -12,7 +12,10 @@
 @stop
 
 @section('content')
+  
     @livewire('inventario.producto-index')
+  
+    
 @stop
 
 @section('css')

@@ -2,10 +2,11 @@
 
 namespace App\Livewire\Inventario;
 
-use Livewire\Component;
-use App\Models\Marca;
-use Illuminate\Support\Facades\Auth;
 use App\Models\User;
+use App\Models\Marca;
+use Livewire\Component;
+use Illuminate\Support\Facades\Auth;
+use App\Http\Controllers\FuncionController;
 
 class MarcaCreate extends Component
 {
@@ -37,7 +38,7 @@ class MarcaCreate extends Component
              $user = User::find($userId);
              
              $ipUsuario = request()->ip();
-             Activity()
+             $activity=Activity()
                  ->causedBy($userId)
                  ->inLog($user->name)
                  ->performedOn($marca)
@@ -49,6 +50,10 @@ class MarcaCreate extends Component
                  ])
                  ->log('Marca Creada: '.$marca->nombre)
              ;
+             $idMaster = $user->empresa_id;
+             $CSV = new FuncionController;
+             
+             $CSV->guardarEnCSV($activity, $idMaster);
              //////////////////////////////////////////////////////////
 
         $this->reset(['nombre']);

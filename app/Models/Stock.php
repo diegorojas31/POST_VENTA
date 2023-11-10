@@ -15,4 +15,9 @@ class Stock extends Model
     {
         return $this->belongsTo('App\Models\Almacen', 'almacen_id');
     }
+
+    public function producto()
+    {
+        return $this->belongsTo('App\Models\Producto', 'producto_id');
+    }    
 }

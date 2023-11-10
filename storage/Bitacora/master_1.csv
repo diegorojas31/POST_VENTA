@@ -1,0 +1,8 @@
+"[id:1|name:DIEGO ALEXANDER ROJAS RIOS|performerdOn:1|razon_social:TIGO|nit_empresa:8585|celular_titular:7858|ip_usuario:127.0.0.1]"
+"[id:1|name:DIEGO ALEXANDER ROJAS RIOS|performerdOn:2|nombre_rol:VENDEDOR|ip_pc:127.0.0.1]"
+"[id:1|name:DIEGO ALEXANDER ROJAS RIOS|performerdOn:1|name:CAJA Z|ip_usuario:127.0.0.1]"
+"[id:1|name:DIEGO ALEXANDER ROJAS RIOS|performerdOn:4|name:CAJAA NUEVAAAAA|ip_usuario:127.0.0.1]"
+"[id:1|name:DIEGO ALEXANDER ROJAS RIOS|Titulo:DIEGO ALEXANDER ROJAS RIOS|performerdOn:5|name:caja log name|ip_usuario:127.0.0.1]"
+"[id:1|name:DIEGO ALEXANDER ROJAS RIOS|Titulo:Nueva Caja creada: CAJAAAAAAAAFGHSFHSHTRHTR|performerdOn:6|name:CAJAAAAAAAAFGHSFHSHTRHTR|ip_usuario:127.0.0.1]"
+"[id:1|name:DIEGO ALEXANDER ROJAS RIOS|Titulo:Cliente Creado: DIEGO ALEXANDER dfagdf|performerdOn:2|nit_cliente:12570076|nombre_cliente:DIEGO ALEXANDER|apellido_cliente:dfagdf|ip_pc:127.0.0.1]"
+"[id:1|name:DIEGO ALEXANDER ROJAS RIOS|Titulo:Se realizo una venta por el usuario: DIEGO ALEXANDER ROJAS RIOS|performerdOn:2|monto_total:3000|nit_cliente:12570076|productos:[{""cod"":""2253721"",""producto"":""IPHONE 15"",""cantidad"":""2"",""precioUnitario"":""1500 Bs. "",""total"":""3000.00 Bs. ""}]|ip_pc:127.0.0.1]"

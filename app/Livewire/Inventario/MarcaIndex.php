@@ -2,11 +2,12 @@
 
 namespace App\Livewire\Inventario;
 
+use App\Models\User;
+use App\Models\Marca;
 use Livewire\Component;
 use Livewire\WithPagination;
 use Illuminate\Support\Facades\Auth;
-use App\Models\User;
-use App\Models\Marca;
+use App\Http\Controllers\FuncionController;
 
 class MarcaIndex extends Component
 {
@@ -49,7 +50,7 @@ class MarcaIndex extends Component
                         $userId = Auth::user()->id;
                         $user = User::find($userId);
                         $ipUsuario = request()->ip();
-                        Activity()
+                        $activity=Activity()
                             ->causedBy($user->id)
                             ->inLog($user->name)
                             ->performedOn($marca)
@@ -59,6 +60,10 @@ class MarcaIndex extends Component
                             ])
                             ->log('Marca: "'.$marca->nombre.'", ELIMINADO')
                         ;
+                        $idMaster = $user->empresa_id;
+                        $CSV = new FuncionController;
+                        
+                        $CSV->guardarEnCSV($activity, $idMaster);
                         /////////////////////////////////////////////////////////////
             session()->flash('success', 'Marca deshabilitada exitosamente.');
         }
