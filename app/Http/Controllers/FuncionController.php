@@ -2,8 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use Spatie\Backup\Tasks\Backup\BackupJob;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
+use Spatie\Backup\Tasks\Backup\BackupJob;
 use Spatie\Backup\Tasks\Backup\Signals\SIGINT;
 
 
@@ -46,7 +47,16 @@ class FuncionController extends Controller
     }
 
     public function nuevoArchivoCSV($idMaster) {
-        $ruta_archivo = storage_path('Bitacora\master_' . $idMaster . '.csv');
+        $ruta_directorio = 'Bitacora';
+        $nombre_archivo = 'master_' . $idMaster . '.csv';
+    
+        // Crea el directorio si no existe
+        Storage::makeDirectory($ruta_directorio);
+    
+        // Ruta completa del archivo
+        $ruta_archivo = storage_path($ruta_directorio . '/' . $nombre_archivo);
+    
+        // Crea el archivo
         touch($ruta_archivo);
     }
     public function backup()
