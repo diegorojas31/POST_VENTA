@@ -172,7 +172,7 @@
                             <div class="form-group">
                                 {!! Form::label('almacen_id', 'Almacen') !!}
                                 <div class="input-group">
-                                    {!! Form::select('almacen_id', ['' => 'Ninguno'] + $almacens->all(), null, ['class' => 'form-control']) !!}
+                                    {!! Form::select('almacen_id', ['' => 'Ninguno'] + $almacens->all(), $stock->almacen_id ?? null, ['class' => 'form-control']) !!}
                                     <div class="input-group-append">
                                         <button type="button" class="btn btn-success">
                                             <i class="fas fa-plus"></i> <!-- Icono + -->

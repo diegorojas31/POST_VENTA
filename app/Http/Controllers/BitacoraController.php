@@ -6,6 +6,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Spatie\Permission\Models\Role;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 use Spatie\Activitylog\Models\Activity;
 
 class BitacoraController extends Controller
@@ -18,8 +19,8 @@ class BitacoraController extends Controller
         $bitacora = '';
         $userId = Auth::id();
         $user = User::find($userId);
-        
-        
+
+
         $roles = Role::where('roles.id', $user->rol_id)->select('*')->first();
 
         if ($roles->name == 'Master') {
@@ -33,7 +34,7 @@ class BitacoraController extends Controller
             config(['adminlte.logo' => "<b>$datos->razon_social</b>"]);
             //-------------------------------------------------------------
             //dd($datos);
-            return view('bitacora.bitacoraView')->with('datos', $datos)->with('bitacora', $bitacora);
+            return view('bitacora.encryptacion_bitacora')->with('datos', $datos)->with('bitacora', $bitacora);
         }
     }
 
@@ -49,6 +50,50 @@ class BitacoraController extends Controller
             'Content-Type' => 'text/csv',
             'Content-Disposition' => 'attachment',
         ]);
+    }
+
+    public function  desencryptar_bitacora(Request $request)
+    {
+        //dd($request);
+        $request->validate([
+            'password' => 'required', // Ajusta las reglas según tus necesidades
+        ],[
+         'password.required'=>'La contraseña es requerida'   
+        ]);
+        $user = auth()->user();
+                // Verificar la contraseña
+                if (Hash::check($request->password, $user->password)) {
+                    // La contraseña es válida, haz algo aquí
+                    // ...
+        
+                    return redirect()->route('mostrar_bitacora');
+                } else {
+                    // La contraseña no es válida
+                    return redirect()->route('Bitacora.index')->with('error', 'Contraseña incorrecta');
+                }
+    }
+
+    public function mostrar_bitacora(){
+        $bitacora = '';
+        $userId = Auth::id();
+        $user = User::find($userId);
+
+
+        $roles = Role::where('roles.id', $user->rol_id)->select('*')->first();
+
+        if ($roles->name == 'Master') {
+            $bitacora = Activity::whereHas('causer', function ($query) use ($user) {
+                $query->where('empresa_id', $user->empresa_id);
+            })->get();
+            //-------------------------------LOGO ADMINLTE----------------
+            $datos = User::join('empresa_clientes', 'empresa_clientes.id', '=', 'users.empresa_id')
+                ->where('users.id', $userId)
+                ->select('*')->first();
+            config(['adminlte.logo' => "<b>$datos->razon_social</b>"]);
+            //-------------------------------------------------------------
+            //dd($datos);
+            return view('bitacora.bitacoraView')->with('datos', $datos)->with('bitacora', $bitacora);
+        }
     }
 
     /**

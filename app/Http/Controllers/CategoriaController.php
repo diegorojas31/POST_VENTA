@@ -188,7 +188,7 @@ class CategoriaController extends Controller
     public function destroy(Categoria $categoria)
     {
         //
-        if ($categoria->productos->isEmpty()) {
+        if ($categoria->productos->where('delete_producto', 1)->isEmpty()) {
             $categoria->delete_categoria = 0;
             $categoria->save();
 

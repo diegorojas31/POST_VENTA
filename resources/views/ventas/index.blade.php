@@ -106,6 +106,10 @@
 
                                     <button class="btn btn-primary btn-block mb-3" id="registrar_venta">Registra
                                         Venta</button>
+                                    <!-- Agrega un campo oculto para almacenar el ID de la venta -->
+
+
+
                                     <div class="form-group">
                                         <label class="form-label">Metodo de pago</label>
                                         <select class="form-select" id="tipo_pago" name="tipo_pago">
@@ -113,7 +117,7 @@
                                             <option value="1">En efectivo</option>
                                             <option value="2">Qr</option>
                                             <option value="3">Tarjeta</option>
-                                            
+
                                         </select>
                                     </div>
                                     <div class="card card-border">
@@ -490,7 +494,7 @@
                             type: 'POST', // Método de solicitud (POST en este caso)
                             dataType: 'json', // Tipo de datos que enviarás y esperas recibir (JSON en este caso)
                             data: {
-                                _token:'{{ csrf_token() }}',
+                                _token: '{{ csrf_token() }}',
                                 caja_id: $('#caja_id').val(),
                                 nombre_cliente: nombre_cliente,
                                 apellido_cliente: apellido_cliente,
@@ -513,6 +517,8 @@
                                     showConfirmButton: false,
                                     buttonsStyling: false,
                                 })
+
+                                generarPdf(data.Ventas.id);
                             },
                             error: function(xhr, status, error) {
                                 // Esta función se ejecuta en caso de error
@@ -535,6 +541,21 @@
                     }
                 })
             });
+
+            function generarPdf(idVenta) {
+                // Construye la URL para la generación de PDF con el ID de la venta
+                var urlPdf = '{{ route('generarpdfventas', ['idventa' => ':idVenta']) }}';
+                urlPdf = urlPdf.replace(':idVenta', idVenta);
+
+                // Crea un enlace temporal y haz clic en él para abrir la URL
+                var link = document.createElement('a');
+                link.href = urlPdf;
+                link.target = '_blank';
+                link.classList.add('d-none');
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+            }
 
 
             function actualizarTotalVenta() {
@@ -598,7 +619,7 @@
                             return {
                                 results: data.map(function(item) {
                                     return {
-                                        text: item.nombre ,
+                                        text: item.nombre,
                                         disponible: item.cantidad,
                                         precio: item.precio,
                                         codigo: item.barcode,

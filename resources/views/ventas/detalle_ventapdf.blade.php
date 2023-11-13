@@ -62,8 +62,8 @@
     <div class="container">
       <div class="row">
           <div class="col-xs-4"><img style="width: 80px" src="{{ public_path('vendor/adminlte/dist/img/LOGOPOSTVENTA.jpg') }}"></div>
-          <div class="col-xs-4"><h5>FACTURA</h5></div>
-          <div class="col-xs-4"><img src="{{ public_path('PDF/images/factura.png') }}"></div>
+          <div class="col-xs-4"><h1>Detalle Venta</h1></div>
+          
       </div>
         <hr>
         <div class="row">
@@ -71,53 +71,49 @@
                 <div class="titulo">Nro. Factura:       </div>
             </div>
             <div class="col-xs-2">
-                <div id="numerofactura"></div>
+                <div id="numerofactura">{{ $ventas->id }}</div>
             </div>
             <div class="col-xs-2">
-                <div class="titulo">Autorizacion:       </div>
+                <div class="titulo">Fecha Emision:  </div>
             </div>
-            <div class="col-xs-5">
-                <div id="numeroauto"></div>
+            <div class="col-xs-2">
+                <div id="fechaemision">{{ $ventas->fecha_venta }}</div>
             </div>
+           
         </div>   
         <div class="row">
+           
             <div class="col-xs-2">
-                <div class="titulo">Fecha Emision: </div>
+                <div class="titulo">NIT Cliente:   </div>
             </div>
             <div class="col-xs-2">
-                <div id="fechaemision"></div>
+                <div id="rucCliente">{{ $ventas->nit_cliente }}</div>
             </div>
             <div class="col-xs-2">
-                <div class="titulo">RUC Cliente:   </div>
+                <div class="titulo">Nombres/Razon:  </div>
             </div>
-            <div class="col-xs-5">
-                <div id="rucCliente"></div>
+            <div class="col-xs-2">
+                <div id="razon"> {{ $ventas->nombre_cliente }} {{ $ventas->apellido_cliente }}</div>
             </div>
         </div>  
        
         <div class="row">
             <div class="col-xs-2">
-                <div class="titulo">Telefono:  {{ $ventas->celular_cliente }}    </div>
+                <div class="titulo">Telefono:      </div>
             </div>
             <div class="col-xs-2">
-                <div id="telefono"></div>
+                <div id="telefono">{{ $ventas->celular_cliente }}</div>
             </div>            
             <div class="col-xs-2">
                 <div class="titulo">Direccion:     </div>
             </div>
-            <div class="col-xs-5">
+            <div class="col-xs-2">
                 <div id="direccion"></div>
             </div>
         </div>          
-        <div class="row">
-            <div class="col-xs-2">
-                <div class="titulo">Nombres/Razon: {{ $ventas->nombre_cliente }} </div>
-            </div>
-            <div class="col-xs-6">
-                <div id="razon"></div>
-            </div>
-        </div>    
-        
+   
+        <br>
+        <br>
         <table class="table table-bordered">
         <thead>
           <tr>
@@ -144,92 +140,18 @@
         </tbody>
       </table>
         <div class="row sinespacio">
-             <div class="col-xs-3">
-                <div><img src="{{ public_path('PDF/images/blanco.png') }}"></div>
+
+            <div class="col-xs-3">
+                <div>Total :   </div>
             </div>
             <div class="col-xs-3">
-                <div id="blanco1"></div>
-            </div>
-            <div class="col-xs-3">
-                <div>Total Sin Impto.:   </div>
-            </div>
-            <div class="col-xs-3">
-                <div class="izq borde" id="totalSinImpto"></div>
+                <div class="izq borde" id="totalSinImpto">{{ $ventas->montototal }}  Bs.</div>
             </div>          
         </div>
-        <div class="row sinespacio">
-             <div class="col-xs-3">
-                <div><img src="{{ public_path('PDF/images/blanco.pn') }}g"></div>
-            </div>
-            <div class="col-xs-3">
-                <div id="blanco2"></div>
-            </div>
-            <div class="col-xs-3">
-                <div>Impuesto 13%:       </div>
-            </div>
-            <div class="col-xs-3">
-                <div class="izq borde" id="valorImpto12"></div>
-            </div>          
-        </div>    
-<!--        <div class="row sinespacio">
-             <div class="col-xs-3">
-                <div><img src="images/blanco.png"></div>
-            </div>
-            <div class="col-xs-3">
-                <div id="blanco3"></div>
-            </div>
-            <div class="col-xs-3">
-                <div>Impuesto 0%:        </div>
-            </div>
-            <div class="col-xs-3">
-                <div class="izq borde" id="valorImpto0"></div>
-            </div>          
-        </div>  -->
-        <div class="row sinespacio">
-             <div class="col-xs-3">
-                <div><img src="{{ public_path('PDF/images/blanco.png') }}"></div>
-            </div>
-            <div class="col-xs-3">
-                <div id="blanco4"></div>
-            </div>
-            <div class="col-xs-3">
-                <div>Valor a Pagar:      </div>
-            </div>
-            <div class="col-xs-3">
-                <div class="izq borde" id="apagar"></div>
-            </div>          
-        </div>
-        <div class="row limpiar"></div>
-        <div class="row">
-            <div class="col-xs-4">
-                <div><img src="{{ public_path('PDF/images/favor.png') }}"></div>
-            </div>
-            <div class="col-xs-1"><img src="{{ public_path('PDF/images/blanco.png') }}"></div>
-            <div class="col-xs-2">
-                <div><img src="{{ public_path('PDF/images/recibiConforme.png') }}"></div>
-            </div>
-            <div class="col-xs-1"><img src="{{ public_path('PDF/images/blanco.png') }}"></div>
-            <div class="col-xs-2">
-                <div><img src="{{ public_path('PDF/images/aceptado.png') }}"></div>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-xs-8 titulopie">
-                Debo y pagare incondicionalmente a la orden de _____ la cantidad de _________ en esra ciudad de Quito
-                En  caso de  mora me  comprometo a  pagar el interes del _____ anual  desde su  vencimiento  hasta la 
-                cancelacion  de  la  deuda. En  el evento de juicio me someto a los jueces de la ciudad de Quito y al 
-                procedimiento  ejecutivo  o  verbal  sumario a eleccion de _____ sin protesto eximese de presentacion 
-                para el pago y de aviso por falta del mismo. 
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-xs-5 titulopie">
-                QUITO, ______ DE ____________ DEL ______</div>
-            <div class="col-xs-1"><img src="{{ public_path('PDF/images/blanco.png') }}"></div>
-            <div class="col-xs-2">
-                <img src="{{ public_path('PDF/images/cliente.png') }}">
-            </div>
-        </div>
+   
+
+
+
     </div>
   </body>
 </html>

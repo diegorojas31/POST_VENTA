@@ -16,6 +16,11 @@ class FuncionController extends Controller
         $cuaser_string = '';
         $cuaser_string .=':';
         foreach ($properties as $key => $value) {
+            if (is_array($value)) {
+                // Si $value es un array, conviértelo a una cadena o realiza el procesamiento necesario
+                $value = json_encode($value); // o utiliza serialize() u otra lógica según tus necesidades
+            }
+
             $properties_string .= $key . ':' . $value . '|';
         }
         $properties_string = rtrim($properties_string, '|');

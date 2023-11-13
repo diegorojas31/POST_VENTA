@@ -15,4 +15,5 @@ class Almacen extends Model
     {
         return $this->hasMany('App\Models\Stock');
     }
+
 }

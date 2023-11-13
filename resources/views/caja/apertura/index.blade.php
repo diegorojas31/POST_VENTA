@@ -48,10 +48,10 @@
                             <div class="d-flex align-items-center">
                                 <div class="d-flex">
                                     @if($caja->estado == 'habilitado')
-                                    <a class="btn btn-icon btn-flush-dark btn-rounded flush-soft-hover" data-bs-toggle="tooltip" data-placement="top" title="" data-bs-original-title="Volver a caja" href="{{ route('abrir_ventas',['cajaventa_id'=>$caja->id]) }}">
+                                    <a class="btn btn-icon btn-flush-dark btn-rounded flush-soft-hover" data-bs-toggle="tooltip" data-placement="top" title="" data-bs-original-title="Continuar Caja" href="{{ route('abrir_ventas',['cajaventa_id'=>$caja->cajaventa]) }}">
                                         <span class="icon">
                                             <span class="feather-icon">
-                                                <i class="fa fa-lg fa-fw fa-eye"></i>
+                                                <i class="bi bi-shop"></i>
                                             </span>
                                         </span>
                                     </a>
@@ -60,7 +60,7 @@
                                     <a class="btn btn-icon btn-flush-dark btn-rounded flush-soft-hover" data-bs-toggle="tooltip" data-placement="top" title="" data-bs-original-title="Iniciar Caja" href="{{ route('apertura.create',['caja'=>$caja->id]) }}">
                                         <span class="icon">
                                             <span class="feather-icon">
-                                                <i class="bi bi-lg bi-cloud-plus"></i> <!-- Cambia 'otro-icono' por la clase del otro icono que desees usar -->
+                                                <i class="bi bi-cart-plus"></i> <!-- Cambia 'otro-icono' por la clase del otro icono que desees usar -->
                                             </span>
                                         </span>
                                     </a>
@@ -69,15 +69,7 @@
                                     
                                     
                                 </div>
-                                <div class="dropdown">
-                                    <button class="btn btn-icon btn-flush-dark btn-rounded flush-soft-hover dropdown-toggle no-caret" aria-expanded="false" data-bs-toggle="dropdown"><span class="icon"><span class="feather-icon"><i data-feather="more-vertical"></i></span></span></button>
-                                    <div class="dropdown-menu dropdown-menu-end">
-                                        <a class="dropdown-item" href="edit-contact.html"><span class="feather-icon dropdown-icon"><i data-feather="edit"></i></span><span>Edit Contact</span></a>
-                                        <a class="dropdown-item" href=""><span class="feather-icon dropdown-icon"><i data-feather="trash-2"></i></span><span>Delete</span></a>
-                                        <a class="dropdown-item" href="#"><span class="feather-icon dropdown-icon"><i data-feather="copy"></i></span><span>Duplicate</span></a>
-                
-                                    </div>
-                                </div>
+
                             </div>
                         </td>
                     </tr>

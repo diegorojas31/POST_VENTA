@@ -29,7 +29,7 @@ class ProductoIndex extends Component
     $empresaCliente = Empresa_cliente::find($datos->empresa_id);
     //dd($datos);
     //$productos = Producto::join('categorias', 'categorias.id', '=', 'productos.categoria_id')->where('delete_producto', 1)->where('categorias.id_empresa', $datos->empresa_id)->orderBy('productos.id', 'asc')->paginate(10);
-    $productos = $empresaCliente->productos()->paginate(10);;
+    $productos = $empresaCliente->productos()->where('productos.delete_producto', 1)->paginate(10);;
     //dd($productos);
 
     $productoIds = $productos->pluck('id');

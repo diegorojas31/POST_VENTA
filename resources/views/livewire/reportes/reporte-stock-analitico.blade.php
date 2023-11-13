@@ -67,7 +67,7 @@
     </div>
 
     <!-- Reporte para imprimir-->
-    <div class="invoice p-3 mb-3">
+    <div id="pdf-content" class="invoice p-3 mb-3">
         <div class="row">
             <div class="col-12">
                 <h4>
@@ -110,7 +110,6 @@
                 <br>
             </div>
         </div>
-
         <div class="row">
             <div class="col-12 table-responsive">
                 <table class="table table-striped">
@@ -148,13 +147,38 @@
             </div>
 
         </div>
-
-        <div class="row no-print">
-            <div class="col-12">
-                <button type="button" class="btn btn-primary float-right" style="margin-right: 5px;">
-                    <i class="fas fa-download"></i> Generate PDF
-                </button>
-            </div>
+    </div>
+   
+    <div class="row no-print">
+        <div class="col-12">
+            <button  type="button" class="btn btn-primary float-right btn-generate-pdf" id="btn-generate-pdf" style="margin-right: 5px;">
+                <i class="fas fa-download"></i> Generate PDF
+            </button>
         </div>
     </div>
 </div>
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.js"></script>
+
+<script>
+    document.getElementById('btn-generate-pdf').addEventListener('click', function() {
+        // Selecciona el elemento con el contenido que deseas convertir
+        const element = document.getElementById('pdf-content');
+
+        // Opciones de configuración para html2pdf
+        const options = {
+            filename: 'documento.pdf',
+            image: { type: 'jpeg' },
+            jsPDF: { format: 'a4' }
+        };
+
+        // Llama a html2pdf con el elemento y las opciones
+        html2pdf().from(element).set(options).outputPdf().then(function(pdf) {
+            // Abre el PDF en una nueva ventana
+            const blob = new Blob([pdf], { type: 'application/pdf' });
+            const viewerUrl = URL.createObjectURL(blob);
+            window.open(viewerUrl, '_blank');
+        });
+    });
+</script>

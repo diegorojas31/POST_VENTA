@@ -3,21 +3,22 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
-use App\Models\Stock;
+use App\Models\Marca;
 
+use App\Models\Stock;
 use App\Models\Medida;
+use App\Models\Almacen;
 use App\Models\Producto;
 use Milon\Barcode\DNS1D;
 use App\Models\Categoria;
 use Illuminate\Http\Request;
-use App\Models\Almacen;
-use App\Models\Marca;
 
+use Illuminate\Validation\Rule;
+use App\Notifications\StockBajo;
 use Illuminate\Support\Facades\Auth;
+
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
-
-use App\Notifications\StockBajo;
 
 class ProductoController extends Controller
 {
@@ -86,7 +87,13 @@ class ProductoController extends Controller
         // dd($request);
         // Crear una regla de validación personalizada para el campo barcode
         $validator = Validator::make($request->all(), [
-            'nombre' => 'required|unique:productos|max:50',
+            'nombre' => [
+                'required',
+                Rule::unique('productos')->where(function ($query) {
+                    $query->where('delete_producto', 1);
+                }),
+                'max:50',
+            ],
             'file' => 'image|mimes:jpeg,png,jpg|max:2048',
             'categoria_id' => 'required',
             'barcode' => [
@@ -261,7 +268,7 @@ class ProductoController extends Controller
         $almacens = Almacen::where('delete_almacen', 1)
             ->where('id_empresa', $datos->empresa_id)
             ->pluck('nombre', 'id');
-
+         
         config(['adminlte.logo' => "<b>$datos->razon_social</b>"]);
         return view('inventario.producto.edit', compact('producto', 'categorias', 'medidas', 'stock', 'marcas', 'almacens'));
     }
@@ -271,9 +278,16 @@ class ProductoController extends Controller
      */
     public function update(Request $request, Producto $producto)
     {
-        //
+        //dd($request,$producto);
         $request->validate([
-            'nombre' => 'required|max:50|unique:productos,nombre,' . $producto->id,
+            'nombre' => [
+                'required',
+                Rule::unique('productos')->where(function ($query) use ($producto) {
+                    $query->where('delete_producto', 1)
+                        ->whereNot('id', $producto->id);
+                }),
+                'max:50',
+            ],
             'file' => 'image|mimes:jpeg,png,jpg|max:2048',
             'categoria_id' => 'required',
             'medida_id' => 'required',
@@ -302,7 +316,7 @@ class ProductoController extends Controller
         $stock = Stock::where('producto_id', $producto->id)->first();
         $preStock = $stock;
         $stock->cantidad = $request->input('cantidad');
-        $stock->almacen_id = $request->input('alamacen_id');
+        $stock->almacen_id = $request->input('almacen_id');
         $stock->minimo = $request->input('minimo');
         $stock->maximo = $request->input('maximo');
 

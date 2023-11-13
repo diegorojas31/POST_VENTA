@@ -169,7 +169,7 @@ class MedidaController extends Controller
     public function destroy(Medida $medida)
     {
         //
-        if ($medida->productos->isEmpty()) {
+        if ($medida->productos->where('delete_producto', 1)->isEmpty()) {
             $medida->delete_medida = 0;
             $medida->save();
 

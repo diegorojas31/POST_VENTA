@@ -19,8 +19,17 @@ class CajaAperturaController extends Controller
         ->where('users.id',$userId)
         ->select('*')->first();
         $cajas = Caja::where('delete_caja', 1)->where('id_empresa', $datos->empresa_id)->get();
-        
-        
+        $cajas = $cajas->map(function ($caja) {
+            // Verifica si la caja está habilitada
+            if ($caja->estado === 'habilitado') {
+                $cajaventa=Cajaventa::where('cajaventas.id_caja',$caja->id)->select('*')->first();
+
+                $caja->cajaventa = $cajaventa->id;
+            }
+            
+            return $caja;
+        });
+        //dd($cajas);
         config(['adminlte.logo' => "<b>$datos->razon_social</b>"]);
         return view('caja.apertura.index',compact('cajas'));
 

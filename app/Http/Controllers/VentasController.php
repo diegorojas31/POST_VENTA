@@ -18,6 +18,7 @@ use Illuminate\Support\Facades\DB;
 use Spatie\Permission\Models\Role;
 use Illuminate\Support\Facades\Auth;
 
+
 class VentasController extends Controller
 {
     public function abrir_ventas($cajaventa_id)
@@ -31,7 +32,7 @@ class VentasController extends Controller
 
         $caja = Cajaventa::join('cajas', 'cajas.id', '=', 'cajaventas.id_caja')->where('cajaventas.id', $cajaventa_id)->select('cajaventas.id as cajaventa_id', '*')->first();
         
-
+          
         config(['adminlte.logo' => "<b>$datos->razon_social</b>"]);
         return view('ventas.index')->with('datos', $datos)->with('caja', $caja);
     }
@@ -75,7 +76,7 @@ class VentasController extends Controller
             ->where(function ($query) use ($search) {
                 $query->where('productos.barcode', '=', $search)
                     ->orWhere('productos.nombre', 'like', '%' . $search . '%');
-            })
+            })->where('productos.delete_producto',1)
             ->select('stocks.id as stock_id', '*')
             ->get();
 
@@ -187,6 +188,7 @@ class VentasController extends Controller
             }
         }
         //---------------------------------------BITACORA---------------------------
+        
 
         $user = User::find($userId);
         $ipUsuario = request()->ip();
@@ -208,7 +210,8 @@ class VentasController extends Controller
             
             $CSV->guardarEnCSV($activity, $idMaster);
         /////////////////////////////////////////////////////////////////////////////
-
+        
+       
         return response()->json([
             'mensaje' => 'Venta registrada con éxito',
             'Ventas' => $venta
@@ -242,7 +245,8 @@ class VentasController extends Controller
         $dompdf->render();
 
         // Generar el nombre del archivo PDF
-        $nombreArchivo = 'venta.pdf';
+        $nombreArchivo = 'venta_' . $ventas->nit_cliente . '.pdf';
+
 
         // Descargar el archivo PDF en el navegador
         return $dompdf->stream($nombreArchivo);

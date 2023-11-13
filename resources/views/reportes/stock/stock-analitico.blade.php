@@ -21,5 +21,8 @@
 @stop
 
 @section('js')
-
+  <!-- jQuery -->
+  <script src="{{ asset('Template/vendors/jquery/dist/jquery.min.js') }}"></script>
+  <!-- Incluir jsPDF -->
+  
 @stop

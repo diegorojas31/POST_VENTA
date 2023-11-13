@@ -61,14 +61,17 @@ Route::group(['middleware' => ['auth', 'verified', 'can:Master']], function () {
     Route::get('abrir_suscripciones', [SuscripcionesController::class, 'abrir_suscripciones'])->name('abrir_suscripciones');
     Route::get('añadir_metodo_pago/{paymentMethod}', [SuscripcionesController::class, 'añadir_metodo_pago'])->name('añadir_metodo_pago');
     Route::get('/descargar-bitacora', [BitacoraController::class, 'descargarBitacora'])->name('descargar.bitacora');
+    Route::post('desencryptar_bitacora', [BitacoraController::class, 'desencryptar_bitacora'])->name('desencryptar_bitacora');
+    Route::get('mostrar_bitacora', [BitacoraController::class, 'mostrar_bitacora'])->name('mostrar_bitacora');
+    
 
 
     Route::get('/reportes/stock', [ReporteStockController::class, 'index'])->name('reportes');
     Route::get('/reportes/stock/analitico', [ReporteStockController::class, 'reporteAnalitico'])->name('stock_analitico');
     Route::get('/reportes/stock/ejecutivo', [ReporteStockController::class, 'reporteEjecutivo'])->name('stock_ejecutivo');
-   // Route::get('/reportes/venta', [ReporteVentasController::class, 'index'])->name('reportes');
-   // Route::get('/reportes/venta/analitico', [ReporteVentasController::class, 'reporteAnalitico'])->name('venta_analitico');
-   // Route::get('/reportes/venta/ejecutivo', [ReporteVentasController::class, 'reporteEjecutivo'])->name('venta_ejecutivo');
+    Route::get('/reportes/venta', [ReporteVentasController::class, 'index'])->name('reportes.ventas');
+    Route::get('/reportes/venta/analitico', [ReporteVentasController::class, 'reporteAnalitico'])->name('venta_analitico');
+    Route::get('/reportes/venta/ejecutivo', [ReporteVentasController::class, 'reporteEjecutivo'])->name('venta_ejecutivo');
 
 
 });

@@ -374,7 +374,7 @@ return [
                     'text' => 'Reporte de Stock',
                     'url' => 'reportes/stock',
                 ],
-               /* [
+              /*  [
                     'text'    => 'Reporte de Ventas',
                     'url'     => 'reportes/venta',
                 ],*/

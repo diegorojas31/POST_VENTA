@@ -43,7 +43,7 @@ class MarcaIndex extends Component
     public function disable($id)
     {
         $marca = Marca::find($id);
-        if ($marca) {
+        if ($marca && $marca->productos->where('delete_producto', 1)->isEmpty() ) {
             $marca->delete_marca = 0;
             $marca->save();
                         //-------------------------BITACORA-------------------------

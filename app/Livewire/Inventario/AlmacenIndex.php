@@ -41,7 +41,7 @@ class AlmacenIndex extends Component
 
     public function disable($id){
         $almacen = Almacen::find($id);
-        if ($almacen) {
+        if ($almacen ) {
             $almacen->delete_almacen = 0;
             $almacen->save();
                         //-------------------------BITACORA-------------------------
