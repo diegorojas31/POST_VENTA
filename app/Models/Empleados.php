@@ -10,4 +10,8 @@ class Empleados extends Model
     use HasFactory;
     protected $table = 'empleados';
     protected $fillable = ['nombre_empleado', 'apellido_empleado', 'celular_empleado', 'usuario_id','cargo_id','delete_empleado'];
+    public function usuario()
+    {
+        return $this->belongsTo(User::class, 'usuario_id');
+    }
 }

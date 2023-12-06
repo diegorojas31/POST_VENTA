@@ -1,6 +1,6 @@
 @extends('adminlte::page')
 
-@section('title', 'Dashboard')
+@section('title', 'Vender')
 
 @section('content_top_nav_right')
     @livewire('notifications')
@@ -106,6 +106,7 @@
 
                                     <button class="btn btn-primary btn-block mb-3" id="registrar_venta">Registra
                                         Venta</button>
+                                    <a href="#" id="generar_factura" name="generarfactura" hidden>Abrir factura</a>
                                     <!-- Agrega un campo oculto para almacenar el ID de la venta -->
 
 
@@ -125,10 +126,20 @@
                                             <form class="edit-post-form">
                                                 <div class="form-group">
                                                     <label class="form-label">Buscar Producto</label>
-                                                    <select id="buscar_producto" class="js-example-basic-single"
-                                                        style="width: 100%;">
-                                                        <!-- Opciones pre-cargadas o vacías -->
-                                                    </select>
+                                                    <div class="row">
+                                                        <div class="col-9">
+                                                            <select id="buscar_producto" class="js-example-basic-single form-control" style="width: 100%;">
+                                                                <!-- Opciones pre-cargadas o vacías -->
+                                                            </select>
+                                                        </div>
+                                                        <div class="col-3">
+                                                            <!-- Botón para abrir el modal -->
+                                                            <button id="scanModal1" title="Escanear Código de Barras" type="button" class="btn btn-primary btn-block text-center" data-toggle="modal" data-target="#scanModal">
+                                                                <i class="bi bi-upc-scan d-block mx-auto"></i>
+                                                            </button>
+                                                            
+                                                        </div>
+                                                    </div>
                                                 </div>
 
                                                 <div class="form-group row">
@@ -228,6 +239,26 @@
             </div>
         </div>
     </div>
+    <!-- Modal para escanear códigos de barras -->
+<div class="modal fade" id="scanModal" tabindex="-1" role="dialog" aria-labelledby="scanModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg d-flex align-items-center justify-content-center" role="document"> <!-- Utilizamos Flexbox para centrar vertical y horizontalmente -->
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="scanModalLabel">Escanear Código de Barras</h5>
+                <button  type="button" class="close close1" data-dismiss="modal" aria-label="Cerrar">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body d-flex align-items-center justify-content-center"> <!-- Utilizamos Flexbox para centrar vertical y horizontalmente -->
+                <!-- Aquí colocarás el lector de códigos de barras, por ejemplo, usando QuaggaJS -->
+                <div id="barcode-scanner-modal" style="width: 480px; max-height: 480px; border: 2px solid #ddd; border-radius: 8px; overflow: hidden;"></div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary close1" data-dismiss="modal">Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>
 @stop
 
 @section('css')
@@ -304,7 +335,8 @@
     <script src="{{ asset('Template/dist/js/init.js') }}"></script>
     <script src="{{ asset('Template/dist/js/contact-data.js') }}"></script>
     <script src="{{ asset('Template/dist/js/chips-init.js') }}"></script>
-
+    <script src="https://cdn.rawgit.com/serratus/quaggaJS/0.12.1/dist/quagga.min.js"></script>
+    <script src="https://cdn.rawgit.com/serratus/quaggaJS/0.12.1/dist/adapter.js"></script>
     <script>
         $(document).ready(function() {
 
@@ -471,10 +503,150 @@
 
                 // Ahora totalVenta contiene el valor total de la venta
                 console.log('Total Venta:', totalVenta);
+                if (tipo_pago == 2) {
+                    var formData = {
+                        _token: '{{ csrf_token() }}',
+                        tcRazonSocial: nombre_cliente + ' ' + apellido_cliente,
+                        tcCiNit: nit_cliente,
+                        tnTelefono: celular_cliente,
+                        tcCorreo: 'diegorojasrios31@gmail.com',
+                        tnMonto: '0.01',
+                        tnTipoServicio: '1',
+                        taPedidoDetalle: [{
+                            Serial: '1',
+                            Producto: 'VENTA',
+                            Cantidad: '1',
+                            Precio: '0',
+                            Descuento: '0',
+                            Total: '0.01'
+                        }],
 
-                Swal.fire({
+                    };
+                    var imgElement;
+                    $.ajax({
+                        type: 'POST',
+                        url: '/consumirServicio',
+                        data: formData,
+                        success: function(response) {
+                            // Maneja la respuesta del servidor
+                            console.log('Respuesta del servidor:', response);
+                            // Puedes realizar acciones adicionales aquí si es necesario
+                            imgElement = $('<img>').attr('src', response.img).attr('alt',
+                                'Imagen QR').addClass('img-fluid');
+                            Swal.fire({
+                                html: '<div class="mb-3"><i class="bi bi-bag-check fs-5 text-success"></i></div><h5 class="text-success">Confirmar Pago</h5><p>TOTAL DE LA VENTA:  ' +
+                                    totalVenta + ' Bs. </p>' +
+                                    '<div class="text-center">' + imgElement[0]
+                                    .outerHTML + '</div>',
+                                customClass: {
+                                    confirmButton: 'btn btn-outline-secondary text-success',
+                                    cancelButton: 'btn btn-outline-secondary text-grey',
+                                    container: 'swal2-has-bg'
+                                },
+                                showCancelButton: true,
+                                buttonsStyling: false,
+                                confirmButtonText: 'Confirmar Pago',
+                                cancelButtonText: 'Cancelar',
+                                reverseButtons: true,
+                            }).then((result) => {
+                                if (result.value) {
+
+                                    // Configura la solicitud AJAX
+                                    $.ajax({
+                                        url: '{{ route('registrar_venta') }}', // URL de ejemplo
+                                        type: 'POST', // Método de solicitud (POST en este caso)
+                                        dataType: 'json', // Tipo de datos que enviarás y esperas recibir (JSON en este caso)
+                                        data: {
+                                            _token: '{{ csrf_token() }}',
+                                            caja_id: $('#caja_id').val(),
+                                            nombre_cliente: nombre_cliente,
+                                            apellido_cliente: apellido_cliente,
+                                            celular_cliente: celular_cliente,
+                                            productosJSON: productosJSON,
+                                            nit_cliente: nit_cliente,
+                                            tipo_pago: tipo_pago,
+                                            totalVenta: totalVenta
+                                        }, // Datos que enviarás al servidor
+                                        success: function(data) {
+                                            // Esta función se ejecuta cuando la solicitud es exitosa
+                                            console.log(
+                                                'Respuesta exitosa:',
+                                                data);
+                                            // Obtener el enlace por su ID
+
+
+
+
+                                            Swal.fire({
+                                                html: '<div class="d-flex align-items-center"><i class="bi bi-bag-check me-2 fs-3 text-success"></i><h5 class="text-success mb-0">La venta fue registrada exitosamente!</h5></div>',
+                                                timer: 2000,
+                                                customClass: {
+                                                    content: 'p-0 text-left',
+                                                    actions: 'justify-content-start',
+                                                },
+                                                showConfirmButton: false,
+                                                buttonsStyling: false,
+                                            })
+
+                                            // Obtener el enlace por su ID
+                                            var enlaceFactura = $(
+                                                '#generar_factura');
+                                            var id_venta = data.Ventas.id;
+
+                                            if (enlaceFactura.length > 0) {
+                                                // Asignar el valor de id_venta directamente en la URL
+                                                enlaceFactura.attr('href',
+                                                    "{{ route('abrir_factura', ['idventa' => 'id_venta']) }}"
+                                                    .replace('id_venta',
+                                                        id_venta));
+
+                                                // Abrir el enlace en una nueva pestaña
+                                                window.open(enlaceFactura
+                                                    .attr('href'),
+                                                    '_blank');
+                                            }
+
+
+
+
+
+
+
+                                            //generarPdf(data.Ventas.id);
+                                        },
+                                        error: function(xhr, status, error) {
+                                            // Esta función se ejecuta en caso de error
+                                            console.error(
+                                                'Error en la solicitud:',
+                                                status, error);
+                                            Swal.fire({
+                                                html: '<div class="d-flex align-items-center"><i class="bi bi-bag-x me-2 fs-3 text-danger"></i><h5 class="text-danger mb-0">No se pudo procesar la venta!</h5></div>',
+                                                timer: 2000,
+                                                customClass: {
+                                                    content: 'p-0 text-left',
+                                                    actions: 'justify-content-start',
+                                                },
+                                                showConfirmButton: false,
+                                                buttonsStyling: false,
+                                            })
+                                        }
+                                    });
+
+
+
+                                }
+                            })
+                        },
+                        error: function(error) {
+                            // Maneja los errores de la solicitud
+                            console.error('Error en la solicitud Ajax:', error);
+                        }
+                    });
+                }else{
+                    Swal.fire({
                     html: '<div class="mb-3"><i class="bi bi-bag-check fs-5 text-success"></i></div><h5 class="text-success">Confirmar Pago</h5><p>TOTAL DE LA VENTA:  ' +
                         totalVenta + ' Bs. </p>',
+                        
                     customClass: {
                         confirmButton: 'btn btn-outline-secondary text-success',
                         cancelButton: 'btn btn-outline-secondary text-grey',
@@ -507,6 +679,11 @@
                             success: function(data) {
                                 // Esta función se ejecuta cuando la solicitud es exitosa
                                 console.log('Respuesta exitosa:', data);
+                                // Obtener el enlace por su ID
+
+
+
+
                                 Swal.fire({
                                     html: '<div class="d-flex align-items-center"><i class="bi bi-bag-check me-2 fs-3 text-success"></i><h5 class="text-success mb-0">La venta fue registrada exitosamente!</h5></div>',
                                     timer: 2000,
@@ -518,7 +695,27 @@
                                     buttonsStyling: false,
                                 })
 
-                                generarPdf(data.Ventas.id);
+                                // Obtener el enlace por su ID
+                                var enlaceFactura = $('#generar_factura');
+                                var id_venta = data.Ventas.id;
+
+                                if (enlaceFactura.length > 0) {
+                                    // Asignar el valor de id_venta directamente en la URL
+                                    enlaceFactura.attr('href',
+                                        "{{ route('abrir_factura', ['idventa' => 'id_venta']) }}"
+                                        .replace('id_venta', id_venta));
+
+                                    // Abrir el enlace en una nueva pestaña
+                                    window.open(enlaceFactura.attr('href'), '_blank');
+                                }
+
+
+
+
+
+
+
+                                //generarPdf(data.Ventas.id);
                             },
                             error: function(xhr, status, error) {
                                 // Esta función se ejecuta en caso de error
@@ -540,6 +737,9 @@
 
                     }
                 })
+                }
+
+
             });
 
             function generarPdf(idVenta) {
@@ -657,4 +857,36 @@
 
         });
     </script>
+          <script>
+            // Configuración de QuaggaJS para el lector dentro del modal
+    
+    
+            // Iniciar QuaggaJS cuando se abre el modal
+            $('#scanModal1').on('click', function () {
+                console.log('entro');
+                Quagga.init({
+                inputStream: {
+                    name: "Live",
+                    type: "LiveStream",
+                    target: document.querySelector('#barcode-scanner-modal'),
+                },
+                decoder: {
+                    readers: ["ean_reader"],
+                }
+            });
+            });
+    
+            // Detener QuaggaJS cuando se cierra el modal
+            $('.close1').on('click', function () {
+                Quagga.stop();
+            });
+    
+            // Manejar el resultado del escaneo dentro del modal
+            Quagga.onDetected(function(result) {
+                var barcode = result.codeResult.code;
+                console.log("Código de barras escaneado (modal): " + barcode);
+    
+                // Aquí puedes realizar acciones adicionales con el código escaneado
+            });
+        </script>
 @stop

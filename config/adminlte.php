@@ -326,7 +326,7 @@ return [
         'can' =>'Master'],
         [
             'text' => 'Gestion Usuario',
-            'icon' => 'fas fa-fw fa-user',
+            'icon' => 'fas fa-users',
             'can' =>'Master',
             'submenu' => [
                 [
@@ -344,7 +344,7 @@ return [
         ],
         [
             'text' => 'Gestion Roles',
-            'icon' => 'fas fa-fw fa-user',
+            'icon' => 'fab fa-critical-role',
             'can' =>'Master',
             'submenu' => [
                 [
@@ -361,18 +361,26 @@ return [
         ],
         [
             'text' => 'Suscripciones',
-            'icon' => 'fas fa-fw fa-user',
+            'icon' => 'fab fa-paypal',
             'can' =>'Master',
             'url'  => 'abrir_suscripciones',
             'text' => 'Plan Suscripciones',
         ],
         [
             'text'    => 'Reportes',
-            'icon'    => 'fa fa-file-pdf',
+            'icon'    => 'fas fa-chart-bar',
             'submenu' => [
                 [
-                    'text' => 'Reporte de Stock',
-                    'url' => 'reportes/stock',
+                    'text' => 'Reportes de Inventario',
+                    'url' => 'reportes/inventario',
+                ],
+                [
+                    'text' => 'Reporte de Ventas',
+                    'url' => 'reportes/venta',
+                ],
+                [
+                    'text' => 'Reportes Caja',
+                    'url' => 'reportes/caja',
                 ],
               /*  [
                     'text'    => 'Reporte de Ventas',
@@ -386,7 +394,7 @@ return [
         [
             'text' => 'Bitacora',
             'route'  => 'bitacora.index',
-            'icon' => 'fas fa-book',
+            'icon' => 'far fa-copyright',
             'can' =>'Master',
         ],
         ['header' => 'ADMINISTRACION'],
@@ -416,7 +424,7 @@ return [
                     'url'  => 'dashboard/inventario/marcas',
                 ],
                 [
-                    'text' => 'Alamacen',
+                    'text' => 'Almacen',
                     'url'  => 'dashboard/inventario/almacenes',
                 ],
 
@@ -424,7 +432,7 @@ return [
         ],
         [
             'text' => 'Mis Ventas',
-            'icon' => 'fas fa-cubes',
+            'icon' => 'fas fa-tasks',
             'can' =>'Ventas y Clientes',
             'submenu' => [
                 [
@@ -466,13 +474,19 @@ return [
             ],
         ],
         [
-            'text'    => 'Ventas (Proximamente)',
+            'text'    => 'Punto de Venta',
             'icon'    => 'fas fa-shopping-cart',
+            'can' => 'Ventas y Clientes',
+            'route'     => 'apertura.index',
+        ],
+        [
+            'text'    => 'Cotizaciones',
+            'icon'    => 'fas fa-clipboard-list',
             'can' => 'Ventas y Clientes',
             'submenu' => [
                 [
-                    'text'    => 'Vender',
-                    'route'     => 'apertura.index',
+                    'text'    => 'Realizar Cotizacion',
+                    'route'     => 'abrir_registrar_cotizacion',
                 ],
 
 

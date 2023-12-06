@@ -52,7 +52,7 @@ class StockBajo extends Notification
     public function toDatabase(object $notifiable): array
     {
         return [
-            //
+            
             'producto_id' => $this->producto['id'],
             'name' => $this->producto['nombre'],
             'cantidad' => $this->stock['cantidad']

@@ -1,5 +1,6 @@
 <?php
-
+use App\Http\Controllers\Reportes\ReporteCajas;
+use App\Http\Controllers\reportes\ReporteInventario;
 use App\Http\Controllers\UsersController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\MedidaController;
@@ -14,6 +15,8 @@ use App\Http\Controllers\MarcaController;
 use App\Http\Controllers\AlmacenController;
 use App\Http\Controllers\NotificacionesController;
 use App\Http\Controllers\BitacoraController;
+use App\Http\Controllers\CotizacionController;
+use App\Http\Controllers\PagoDigitalController;
 use App\Http\Controllers\RolesController;
 use App\Http\Controllers\SuscripcionesController;
 use App\Http\Controllers\Reportes\ReporteStockController;
@@ -63,21 +66,29 @@ Route::group(['middleware' => ['auth', 'verified', 'can:Master']], function () {
     Route::get('/descargar-bitacora', [BitacoraController::class, 'descargarBitacora'])->name('descargar.bitacora');
     Route::post('desencryptar_bitacora', [BitacoraController::class, 'desencryptar_bitacora'])->name('desencryptar_bitacora');
     Route::get('mostrar_bitacora', [BitacoraController::class, 'mostrar_bitacora'])->name('mostrar_bitacora');
-    
 
 
-    Route::get('/reportes/stock', [ReporteStockController::class, 'index'])->name('reportes');
-    Route::get('/reportes/stock/analitico', [ReporteStockController::class, 'reporteAnalitico'])->name('stock_analitico');
-    Route::get('/reportes/stock/ejecutivo', [ReporteStockController::class, 'reporteEjecutivo'])->name('stock_ejecutivo');
+
+       //Route::get('/reportes/stock', [ReporteStockController::class, 'index'])->name('reportes');
+   //Route::get('/reportes/stock/analitico', [ReporteStockController::class, 'reporteAnalitico'])->name('stock_analitico');
+    //Route::get('/reportes/stock/ejecutivo', [ReporteStockController::class, 'reporteEjecutivo'])->name('stock_ejecutivo');
+
+    Route::get('/reportes/inventario', [ReporteInventario::class, 'index'])->name('reportes.inventario');
+    Route::get('/reportes/inventario/analitico', [ReporteInventario::class, 'reporteAnalitico'])->name('inventario_analitico');
+    Route::get('/reportes/inventario/ejecutivo', [ReporteInventario::class, 'reporteEjecutivo'])->name('inventario_ejecutivo');
+    Route::get('/reportes/inventario/personalizado', [ReporteInventario::class, 'reportePersonalizado'])->name('inventario_personalizado');
+
     Route::get('/reportes/venta', [ReporteVentasController::class, 'index'])->name('reportes.ventas');
     Route::get('/reportes/venta/analitico', [ReporteVentasController::class, 'reporteAnalitico'])->name('venta_analitico');
     Route::get('/reportes/venta/ejecutivo', [ReporteVentasController::class, 'reporteEjecutivo'])->name('venta_ejecutivo');
+    Route::get('/reportes/venta/personalizado', [ReporteVentasController::class, 'reportePerzonalizado'])->name('venta_personalizado');
 
-
+    Route::get('/reportes/caja', [ReporteCajas::class, 'index'])->name('reportes.cajas');
+    Route::get('/reportes/caja/analitico', [ReporteCajas::class, 'reporteAnalitico'])->name('caja_analitico');
+    Route::get('/reportes/caja/ejecutivo', [ReporteCajas::class, 'reporteEjecutivo'])->name('caja_ejecutivo');
 });
 
 Route::group(['middleware' => ['auth', 'verified', 'can:Sucursales']], function () {
-  
 });
 Route::group(['middleware' => ['auth', 'verified', 'can:Inventarios']], function () {
     // Rutas Autenticadas que solo pueden ser accedidas por usuarios con el rol "Admin"
@@ -87,8 +98,6 @@ Route::group(['middleware' => ['auth', 'verified', 'can:Inventarios']], function
     Route::resource('dashboard/inventario/medidas', MedidaController::class);
     Route::resource('/dashboard/inventario/marcas', MarcaController::class);
     Route::resource('/dashboard/inventario/almacenes', AlmacenController::class);
-
-   
 });
 Route::group(['middleware' => ['auth', 'verified', 'can:Caja']], function () {
 
@@ -105,27 +114,32 @@ Route::group(['middleware' => ['auth', 'verified', 'can:Caja']], function () {
     Route::put('caja/{caja}', [CajaController::class, 'update'])->name('caja.update');
 
     Route::get('obtener_datos_cajaventa/{id_cajaventa}', [CajaController::class, 'obtener_datos_cajaventa'])->name('obtener_datos_cajaventa');
-
 });
 Route::group(['middleware' => ['auth', 'verified', 'can:Ventas y Clientes']], function () {
     // Rutas Autenticadas que solo pueden ser accedidas por usuarios con el rol "Admin"
 
-    Route::get('apertura',[CajaAperturaController::class,'index'])->name('apertura.index');
-    Route::get('apertura/{caja}',[CajaAperturaController::class,'show'])->name('apertura.show');
-    Route::get('/apertura/{caja}/create', [CajaAperturaController::class,'create'])->name('apertura.create');
-    Route::post('apertura/index/{caja}',[CajaAperturaController::class,'store'])->name('apertura.store');
+    Route::get('apertura', [CajaAperturaController::class, 'index'])->name('apertura.index');
+    Route::get('apertura/{caja}', [CajaAperturaController::class, 'show'])->name('apertura.show');
+    Route::get('/apertura/{caja}/create', [CajaAperturaController::class, 'create'])->name('apertura.create');
+    Route::post('apertura/index/{caja}', [CajaAperturaController::class, 'store'])->name('apertura.store');
     Route::match(['get', 'put'], 'apertura/in/{caja}', [CajaAperturaController::class, 'stores'])->name('apertura.stores');
-    Route::post('cerrar_caja',[CajaAperturaController::class,'cerrar_caja'])->name('cerrar_caja');
+    Route::post('cerrar_caja', [CajaAperturaController::class, 'cerrar_caja'])->name('cerrar_caja');
 
     Route::get('obtener_datos_cajaventa/{id_cajaventa}', [CajaController::class, 'obtener_datos_cajaventa'])->name('obtener_datos_cajaventa');
 
     Route::get('allventas', [VentasController::class, 'allventas'])->name('allventas');
+    Route::get('abrir_factura/{idventa}', [VentasController::class, 'abrir_factura'])->name('abrir_factura');
     route::get('abrir_ventas/{cajaventa_id}', [VentasController::class, 'abrir_ventas'])->name('abrir_ventas');
     //Route::get('allventas_caja/{caja_id}',[App\Http\Controllers\UsersController::class,'allventas_caja'])->name('allventas_caja');
     Route::get('/buscar_producto/{search}', [VentasController::class, 'buscar_producto'])->name('buscar_producto');
     Route::post('registrar_venta', [VentasController::class, 'registrar_venta'])->name('registrar_venta');
     Route::get('/generarpdfventas/{idventa}', [VentasController::class, 'generarpdfventas'])->name('generarpdfventas');
 
+    Route::post('/consumirServicio', [PagoDigitalController::class, 'RecolectarDatos']);
+    Route::post('/consultar', [PagoDigitalController::class, 'ConsultarEstado']);
+
+    Route::get('abrir_registrar_cotizacion', [CotizacionController::class, 'abrir_registrar_cotizacion'])->name('abrir_registrar_cotizacion');
+    Route::POST('registrar_cotizacion', [CotizacionController::class, 'registrar_cotizacion'])->name('registrar_cotizacion');
 
     Route::get('/buscar-por-nit/{nit}', [ClienteController::class, 'buscarPorNit'])->name('buscarPorNit');
     Route::get('clientes', [ClienteController::class, 'index'])->name('clientes.index');
@@ -164,7 +178,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
 
 
-   
+
 
     Route::get('/notificaciones', [NotificacionesController::class, 'index'])->name('notificaciones');
 });

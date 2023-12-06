@@ -12,23 +12,28 @@ class Producto extends Model
 
     use HasFactory;
 
-    public function categoria()
-    {
-        return $this->belongTo('App\Models\Categoria');
-    }
-
     public function medida()
     {
-        return $this->belongsTo('App\Models\Medida', 'medida_id');
+        return $this->belongsTo(Medida::class, 'medida_id');
+    }
+
+    public function stock()
+    {
+        return $this->hasOne(Stock::class, 'producto_id');
     }
 
     public function marca()
     {
-        return $this->belongsTo('App\Models\Marca', 'marca_id');
-    }    
+        return $this->belongsTo(Marca::class, 'marca_id');
+    }
 
-    public function stock()
+    public function categoria()
     {
-        return $this->hasOne('App\Models\Stock');
+        return $this->belongsTo(Categoria::class, 'categoria_id');
+    }
+
+    public function detalleVentas()
+    {
+        return $this->hasMany(DetalleVentas::class, 'id_producto');
     }
 }

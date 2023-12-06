@@ -12,6 +12,6 @@ class Categoria extends Model
     protected $fillable = ['inventario_id', 'nombre', 'descripcion', 'image', 'delete_categoria','id_empresa'];
 
     public function productos(){
-        return $this->hasMany('App\Models\Producto');
+        return $this->hasMany(Producto::class);
     }
 }

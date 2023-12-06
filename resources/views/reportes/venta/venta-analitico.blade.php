@@ -9,7 +9,6 @@
 @endsection
 
 @section('content_header')
-    <h1>Reporte de Venta Analitico</h1>
 @stop
 
 @section('content')

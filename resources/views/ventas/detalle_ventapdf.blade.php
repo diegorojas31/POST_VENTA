@@ -1,157 +1,170 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-  <head>
+<head>
     <meta charset="UTF-8">
-    <title>NOTA DE VENTA</title>
-    <link rel="stylesheet" href="{{ public_path('PDF/css/reset.css') }}">
-    <link rel="stylesheet" href="{{ public_path('PDF/css/bootstrap_prince.css') }}">
-    <script src="{{ public_path('PDF/js/bootstrap_prince.js') }}"></script>
-    <style>
-      @import url(http://fonts.googleapis.com/css?family=Bree+Serif);
-      body, h1, h2, h3, h4, h5, h6{
-      font-family: 'Bree Serif', serif;
-      }
-      span, h4, .letra {
-          font-family: "Times New Roman";
-          font-size: 10px;
-      }
-      .titulo {
-          font-family: "Arial Narrow", Arial, sans-serif;
-          font-size: 12px;
-          white-space: pre;
-      }
-      .titulopie {
-          font-family: Tahoma, Verdana, Segoe, sans-serif;
-          font-size: 12px;
-          white-space: pre;
-      }
-      .row > .sinespacio {
-          display: inline-block;
-          margin: 0;
-          float: left;
-          white-space: nowrap;
-      }
-      .row > .limpiar {
-          clear: both;
-      }
-      table {
-          border: 0px;
-          border-spacing: 0px;
-          border-collapse: collapse;
-      }
-      td, th {
-          padding: 0px;
-          border: 0px;
-          margin: 0px;
-      }
-      .izq {
-          text-align: right;
-      }
-      .borde {
-          border-style: solid;
-          border-width: 1px;
-          border-color: black;
-          padding-bottom: 3px;
-      }
+    <title>FACTURA POST VENTA</title>
+    <link rel="stylesheet" href="{{ asset('assets/css/main.css') }}">
+    <link rel="icon" href="{{ asset('vendor/adminlte/dist/img/LOGOPOSTVENTA.jpg') }}" type="image/x-icon" style="border-radius: 50%;">
+</head>
+<body>
+<div class="control-bar">
+  <div class="container">
+    <div class="row">
+      <div class="col-2-4">
+        <div class="slogan">Facturación </div>
 
-      @page { size:8.5in 11in; margin: 1cm }
-    </style>
-  </head>
-  
-  <body>
-    <div class="container">
-      <div class="row">
-          <div class="col-xs-4"><img style="width: 80px" src="{{ public_path('vendor/adminlte/dist/img/LOGOPOSTVENTA.jpg') }}"></div>
-          <div class="col-xs-4"><h1>Detalle Venta</h1></div>
-          
-      </div>
-        <hr>
-        <div class="row">
-            <div class="col-xs-2">
-                <div class="titulo">Nro. Factura:       </div>
-            </div>
-            <div class="col-xs-2">
-                <div id="numerofactura">{{ $ventas->id }}</div>
-            </div>
-            <div class="col-xs-2">
-                <div class="titulo">Fecha Emision:  </div>
-            </div>
-            <div class="col-xs-2">
-                <div id="fechaemision">{{ $ventas->fecha_venta }}</div>
-            </div>
-           
-        </div>   
-        <div class="row">
-           
-            <div class="col-xs-2">
-                <div class="titulo">NIT Cliente:   </div>
-            </div>
-            <div class="col-xs-2">
-                <div id="rucCliente">{{ $ventas->nit_cliente }}</div>
-            </div>
-            <div class="col-xs-2">
-                <div class="titulo">Nombres/Razon:  </div>
-            </div>
-            <div class="col-xs-2">
-                <div id="razon"> {{ $ventas->nombre_cliente }} {{ $ventas->apellido_cliente }}</div>
-            </div>
-        </div>  
-       
-        <div class="row">
-            <div class="col-xs-2">
-                <div class="titulo">Telefono:      </div>
-            </div>
-            <div class="col-xs-2">
-                <div id="telefono">{{ $ventas->celular_cliente }}</div>
-            </div>            
-            <div class="col-xs-2">
-                <div class="titulo">Direccion:     </div>
-            </div>
-            <div class="col-xs-2">
-                <div id="direccion"></div>
-            </div>
-        </div>          
-   
-        <br>
-        <br>
-        <table class="table table-bordered">
-        <thead>
-          <tr>
-              <th><h4 class="titulo">&nbsp;&nbsp;&nbsp;Codigo&nbsp;&nbsp;&nbsp;</h4></th>
-        <th><h4 class="titulo">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Descripcion&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</h4></th>
-        <th><h4 class="titulo">&nbsp;&nbsp;&nbsp;Cant.&nbsp;&nbsp;&nbsp;</h4></th>
-        <th><h4 class="titulo">&nbsp;&nbsp;&nbsp;&nbsp;P.Unit.&nbsp;&nbsp;&nbsp;&nbsp;</h4></th>
-        <th><h4 class="titulo">&nbsp;&nbsp;&nbsp;&nbsp;Dscto.&nbsp;&nbsp;&nbsp;&nbsp;</h4></th>
-        <th><h4 class="titulo">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Subtotal&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</h4></th>
-          </tr>
-        </thead>
-        <tbody>
-            @foreach($detalle_venta as $producto)
-            <tr>
-                <td class="codigo">{{ $producto->barcode }}</td>
-                <td class="descripcion">{{ $producto->nombre }}</td>
-                <td class="cantidad izq">{{ $producto->cantidad}}</td>
-                <td class="precio izq">{{ $producto->precio }}</td>
-                <td class="descuento izq">{{ 0 }}</td>
-                <td class="subtotal izq">{{ $producto->subtotal }}</td>
-            </tr>
-        @endforeach
+        <label for="config_tax">IVA:
+          <input type="checkbox" id="config_tax" />
+        </label>
+        <label for="config_tax_rate" class="taxrelated">Tasa:
+          <input type="text" id="config_tax_rate" value="13"/>%
+        </label>
+        <label for="config_note">Nota:
+          <input type="checkbox" id="config_note" />
+        </label>
         
-        </tbody>
-      </table>
-        <div class="row sinespacio">
+      </div>
+      <div class="col-4 text-right">
+        <a href="javascript:window.print()">Imprimir</a>
+      </div><!--.col-->
+    </div><!--.row-->
+  </div><!--.container-->
+</div><!--.control-bar-->
 
-            <div class="col-xs-3">
-                <div>Total :   </div>
-            </div>
-            <div class="col-xs-3">
-                <div class="izq borde" id="totalSinImpto">{{ $ventas->montototal }}  Bs.</div>
-            </div>          
-        </div>
+<header class="row">
+  <div class="logoholder text-center" >
+    <img src="{{ asset('vendor/adminlte/dist/img/LOGOPOSTVENTA.jpg') }}" style="width: 80px">
+  </div><!--.logoholder-->
+
+  <div class="me">
+    <p  >
+      <strong>POST VENTA</strong><br>
+      postventasi2oficial@gmail.com<br>
+      Santa Cruz - Bolivia<br>
+      
+    </p>
+  </div><!--.me-->
+
+  <div class="info">
+    <p  >
+    
+    </p>
+  </div><!-- .info -->
+
+  <div class="bank">
+    <p  >
+      Nit Empresa :  {{ $datos_empresa['nit_empresa'] }}<br>
+      Titular de la cuenta: {{ $datos_empresa['razon_social'] }}<br>
+
+    </p>
+  </div><!--.bank-->
+
+</header>
+
+
+<div class="row section">
+
+	<div class="col-2 text-right details">
+    <h1  >Factura</h1>
+  </div><!--.col-->
+
+  <div class="col-2 text-right details">
+    <p  >
+      Fecha: <input type="text" class="datePicker" value="{{ $venta['fecha_venta'] }}" /><br>
+      Factura #: <input type="text" value="{{ $venta['id'] }}" /><br>
+     Vence: <input class="twoweeks" type="text"/>
+    </p>
+  </div><!--.col-->
+  
+  
+  
+  <div class="col-4">
+    
+
+    <p   class="client">
+      <strong>Facturar a</strong><br>
+      <strong>NIT/CI/CEX : </strong>  <br>
+      <strong>Nombre/Razon Social : </strong> <br>
+      <strong>Fecha : </strong> <br>
+	  <strong>Celular/Telefono : </strong>
+    </p>
+  </div><!--.col-->
+  
+  
+  <div class="col-2">
    
 
+    <p   class="client">
+      <strong>Enviar a</strong><br>
+      {{ $venta['nit_cliente'] }} <br>
+      {{ $venta['nombre_cliente'] }} {{ $venta['apellido_cliente'] }}<br>
+	  {{ $venta['fecha_venta'] }}<br>
+	  {{ $venta['celular_cliente'] }}
+    </p>
+  </div><!--.col-->
+
+  
+
+</div><!--.row-->
+
+<div class="row section" style="margin-top:-1rem">
 
 
-    </div>
-  </body>
+</div><!--.row-->
+
+<div class="invoicelist-body">
+  <table>
+    <thead  >
+      <th width="5%">Código</th>
+      <th width="60%">Descripción</th>
+      
+      <th width="10%">Cant.</th>
+      <th width="15%">Precio</th>
+      <th class="taxrelated">IVA</th>
+      <th width="10%">Total</th>
+    </thead>
+    <tbody>
+      @foreach($detalle_venta as $detalle)
+      <tr>
+        <td width='5%'> <span  >{{ $detalle['barcode'] }}</span></td>
+        <td width='60%'><span  >{{ $detalle['nombre'] }} - {{ $detalle['descripcion'] }}</span></td>
+        <td class="amount"><input type="text" value="{{ $detalle['cantidad'] }}"/></td>
+        <td class="rate"><input type="text" value="{{ $detalle['subtotal'] }}" /></td>
+        <td class="tax taxrelated"></td>
+        <td class="sum"></td>
+      </tr>
+      @endforeach
+    </tbody>
+  </table>
+  
+</div><!--.invoice-body-->
+
+<div class="invoicelist-footer">
+  <table  >
+    <tr class="taxrelated">
+      <td>IVA:</td>
+      <td id="total_tax"></td>
+    </tr>
+    <tr>
+      <td><strong>Total:</strong></td>
+      <td id="total_price"></td>
+    </tr>
+  </table>
+</div>
+
+<div class="note"  >
+  <h2>Nota:</h2>
+</div><!--.note-->
+
+<footer class="row">
+  <div class="col-1 text-center">
+    <p class="notaxrelated"  >ESTA FACTURA CONTRIBUYE AL DESARROLLO DEL PAÍS. EL USO ILÍCITO DE ÉSTA SERÁ SANCIONADO DE ACUERDO A LEY.</p>
+    
+  </div>
+</footer>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+<script>window.jQuery || document.write('<script src="{{ asset('assets/bower_components/jquery/dist/jquery.min.js') }}"><\/script>')</script>
+<script src="{{ asset('assets/js/main.js') }}"></script>
+</body>
 </html>

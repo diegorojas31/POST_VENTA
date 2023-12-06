@@ -10,4 +10,8 @@ class Caja extends Model
     use HasFactory;
     protected $table = 'cajas';
     protected $fillable = ['title_caja', 'estado', 'delete_caja','id_empresa'];
+    public function cajaventas()
+    {
+        return $this->hasMany(Cajaventa::class, 'id_caja', 'id');
+    }
 }

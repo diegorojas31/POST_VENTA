@@ -114,53 +114,59 @@ window.Apex = {
 };
 /*Stacked Column*/
 var options1 = {
-	series: [{
-		name: 'PRODUCT A',
-		data: [44, 55, 41, 67, 22, 43,44, 55, 41, 67, 22, 43]
-	}, {
-		name: 'PRODUCT B',
-		data: [13, 23, 20, 8, 13, 27,13, 23, 20, 8, 13, 27]
-	}, {
-		name: 'PRODUCT C',
-		data: [11, 17, 15, 15, 21, 14,11, 17, 15, 15, 21, 14]
-	}],
-	chart: {
-		type: 'bar',
-		height: 250,
-		stacked: true,
-		toolbar: {
-			show: false
-		},
-		zoom: {
-			enabled: false
-		},
-	},
-	
-	plotOptions: {
-		bar: {
-			horizontal: false,
-			columnWidth: '35%',
-			borderRadius: 5,
-			
-		},
-	},
-	xaxis: {
-		type: 'datetime',
-		categories: ['01/02/2021 GMT', '01/03/2021 GMT', '01/04/2021 GMT',
-			'01/05/2021 GMT', '01/06/2021 GMT','01/07/2021 GMT', '01/08/2021 GMT', '01/09/2021 GMT', '01/10/2021 GMT',
-			'01/11/2021 GMT', '01/12/2021 GMT','01/13/2021 GMT'
-		],
-	},
-	legend: {
-		show:false
-	},
-	colors: ['#007D88', '#25cba1', '#ebf3fe'],
-	fill: {
-		opacity: 1
-	},
-	dataLabels: {
-		enabled: false,
-	}
+    series: [{
+        name: 'Cantidad Vendida',
+        data: cantidadesVendidas,
+    }],
+    chart: {
+        type: 'bar',
+        height: 350,
+    },
+    plotOptions: {
+        bar: {
+            columnWidth: '50%',
+        },
+    },
+    dataLabels: {
+        enabled: true,
+        formatter: function(val) {
+            return val;
+        },
+        offsetY: -20,
+        style: {
+            fontSize: '14px',
+            colors: ['#ffffff']
+        }
+    },
+    xaxis: {
+        categories: nombresProductos,
+        position: 'top',
+        labels: {
+            offsetY: -18,
+        },
+        axisBorder: {
+            show: false
+        },
+        axisTicks: {
+            show: false
+        },
+        crosshairs: {
+            fill: {
+                type: 'gradient',
+                gradient: {
+                    colorFrom: '#D8E3F0',
+                    colorTo: '#007d88',
+                    stops: [0, 100],
+                    opacityFrom: 0.4,
+                    opacityTo: 0.5,
+                }
+            }
+        },
+        tooltip: {
+            enabled: true,
+            offsetY: -35,
+        }
+    },
 };
 var chart1 = new ApexCharts(document.querySelector("#column_chart_2"), options1);
 chart1.render();
@@ -195,7 +201,7 @@ var options2 = {
 				total: {
 					show: true,
 					formatter: function () {
-						return [('$200')];
+						return [(totalVentas+ 'Bs.')];
 					}
 				}
 			  }
@@ -207,6 +213,7 @@ var options2 = {
 
 var chart2 = new ApexCharts(document.querySelector("#radial_chart_2"), options2);
 chart2.render();
+
 
 /*Animated Map*/	
 am4core.ready(function() {

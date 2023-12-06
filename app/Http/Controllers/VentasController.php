@@ -13,6 +13,7 @@ use App\Models\Producto;
 use App\Models\Cajaventa;
 use Illuminate\Http\Request;
 use App\Models\DetalleVentas;
+use App\Models\Empresa_cliente;
 use App\Notifications\StockBajo;
 use Illuminate\Support\Facades\DB;
 use Spatie\Permission\Models\Role;
@@ -42,6 +43,18 @@ class VentasController extends Controller
         $cajainfo = Caja::join('cajaventas', 'cajaventas.id_caja', '=', 'cajas.id')->where('cajaventas.id', $id_cajaventa)->select()->fist();
         $datoscaja = Cajaventa::join('ventas', 'ventas.id_caja_venta', '=', 'cajaventas.id')->where('cajaventas.id', $id_cajaventa)->select('*')->get();
         return response()->json(['cajainfo' => $cajainfo, 'datoscaja' => $datoscaja]);
+    }
+    public function abrir_factura($idventa){
+        $detalle_venta = DetalleVentas::join('productos', 'productos.id', '=', 'detalle_venta.id_producto')->join('ventas', 'ventas.id', '=', 'detalle_venta.id_venta')->where('detalle_venta.id_venta', $idventa)->select('*')->get();
+        $venta = Ventas::join('clientes', 'clientes.id', '=', 'ventas.id_cliente')->where('ventas.id', $idventa)->select('*')->first();
+
+        
+        $userId = Auth::id();
+        $datos_empresa= User::join('empresa_clientes','empresa_clientes.id','=','users.empresa_id')->where('users.id',$userId)->select('*')->first();
+       // dd($datos_empresa); 
+        return view('ventas.detalle_ventapdf')->with('venta',$venta)->with('detalle_venta',$detalle_venta)->with('datos_empresa', $datos_empresa);
+        
+        
     }
 
     public function allventas()
@@ -212,6 +225,7 @@ class VentasController extends Controller
         /////////////////////////////////////////////////////////////////////////////
         
        
+        
         return response()->json([
             'mensaje' => 'Venta registrada con éxito',
             'Ventas' => $venta

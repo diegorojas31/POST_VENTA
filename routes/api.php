@@ -1,7 +1,10 @@
 <?php
 
+use App\Http\Controllers\Api\VentasApiController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\AuthController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -17,3 +20,8 @@ use Illuminate\Support\Facades\Route;
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
+Route::post('/register', [AuthController::class, 'register']);
+Route::post('/login', [AuthController::class, 'login']);
+Route::get('/buscar_producto_api/{search}', [VentasApiController::class, 'buscar_producto_api'])->name('buscar_producto_api');
+Route::post('/registrar_venta_api', [VentasApiController::class, 'registrar_venta_api'])->name('registrar_venta_api');
+

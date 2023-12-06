@@ -55,7 +55,7 @@
                                 data-bs-placement="top" 
                                 title="Descargar Venta Pdf" 
                                 data-bs-original-title="Archivo" 
-                                href="{{ route('generarpdfventas', ['idventa' => $venta->id_venta]) }}">
+                                href="{{ route('abrir_factura', ['idventa' => $venta->id_venta]) }}">
                                 <span class="btn-icon-wrap">
                                    <span class="fas fa-file-pdf"></span>
                                 </span>

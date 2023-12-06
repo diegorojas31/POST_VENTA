@@ -14,4 +14,9 @@ class Cajaventa extends Model
     {
         return $this->belongsTo(Caja::class, 'id_caja', 'id');
     }
+
+    public function empleado()
+    {
+        return $this->belongsTo(Empleados::class, 'id_usuario', 'usuario_id');
+    }
 }

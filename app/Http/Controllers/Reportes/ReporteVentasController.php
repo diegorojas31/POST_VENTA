@@ -27,4 +27,9 @@ class ReporteVentasController extends Controller
 
         return view('reportes.venta.venta-ejecutivo');
     }
+
+    public function reportePerzonalizado(){
+        
+        return view('reportes.venta.personalizado');
+    }
 }

@@ -44,7 +44,7 @@ class BitacoraController extends Controller
         $user = User::find($userId);
         $id_empresa = $user->empresa_id;
         $archivo = "master_" . $id_empresa . ".csv";
-        $rutaArchivo = storage_path("Bitacora/{$archivo}");
+        $rutaArchivo = storage_path("Bitacora\{$archivo}");
 
         return response()->download($rutaArchivo, $archivo, [
             'Content-Type' => 'text/csv',

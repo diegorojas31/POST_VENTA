@@ -7,7 +7,7 @@
 
 
 @section('content_header')
-    <h1>Panel administrativo  (Proximamente)</h1>
+    <h1>Panel administrativo</h1>
 @stop
 
 @section('content')
@@ -49,39 +49,18 @@
                                 <div class="col-xxl-3 col-sm-6 mb-xxl-0 mb-3">
                                     <span class="d-block fw-medium fs-7">Users</span>
                                     <div class="d-flex align-items-center">
-                                        <span class="d-block fs-4 fw-medium text-dark mb-0">8.8k</span>
-                                        <span class="badge badge-sm badge-soft-success ms-1">
-                                            <i class="bi bi-arrow-up"></i> 7.5%
-                                        </span>
+                                        <span class="d-block fs-4 fw-medium text-dark mb-0">{{ $cant_users }}</span>
+
                                     </div>
                                 </div>
                                 <div class="col-xxl-3 col-sm-6 mb-xxl-0 mb-3">
-                                    <span class="d-block fw-medium fs-7">Sessions</span>
+                                    <span class="d-block fw-medium fs-7">Ventas</span>
                                     <div class="d-flex align-items-center">
-                                        <span class="d-block fs-4 fw-medium text-dark mb-0">18.2k</span>
-                                        <span class="badge badge-sm badge-soft-success ms-1">
-                                            <i class="bi bi-arrow-up"></i> 7.2%
-                                        </span>
+                                        <span class="d-block fs-4 fw-medium text-dark mb-0">{{ $cant_ventas }}</span>
+
                                     </div>
                                 </div>
-                                <div class="col-xxl-3 col-sm-6 mb-xxl-0 mb-3">
-                                    <span class="d-block fw-medium fs-7">Bounce rate</span>
-                                    <div class="d-flex align-items-center">
-                                        <span class="d-block fs-4 fw-medium text-dark mb-0">46.2%</span>
-                                        <span class="badge badge-sm badge-soft-danger ms-1">
-                                            <i class="bi bi-arrow-down"></i> 0.2%
-                                        </span>
-                                    </div>
-                                </div>
-                                <div class="col-xxl-3 col-sm-6">
-                                    <span class="d-block fw-medium fs-7">Session duration</span>
-                                    <div class="d-flex align-items-center">
-                                        <span class="d-block fs-4 fw-medium text-dark mb-0">4m 24s</span>
-                                        <span class="badge badge-sm badge-soft-success ms-1">
-                                            <i class="bi bi-arrow-up"></i> 10.8%
-                                        </span>
-                                    </div>
-                                </div>
+
                             </div>
                         </div>
                     </div>
@@ -113,14 +92,14 @@
                                         class="badge bg-primary badge-indicator badge-indicator-nobdr d-inline-block"></span>
                                     <span class="badge-label d-inline-block">Ganancias</span>
                                 </span>
-                                <span class="d-block text-dark fs-5 fw-medium mb-0 mt-1">$1000</span>
+                                <span class="d-block text-dark fs-5 fw-medium mb-0 mt-1">${{ $total_ventas }}</span>
                             </div>
                             <div>
                                 <span class="badge-status lh-1">
                                     <span class="badge bg-primary-light-2 badge-indicator badge-indicator-nobdr"></span>
-                                    <span class="badge-label">Ganancias Netas</span>
+                                    <span class="badge-label">Monto Total</span>
                                 </span>
-                                <span class="d-block text-dark fs-5 fw-medium mb-0 mt-1">$200</span>
+                                <span class="d-block text-dark fs-5 fw-medium mb-0 mt-1">${{ $total_ventas }}</span>
                             </div>
                         </div>
                     </div>
@@ -156,6 +135,19 @@
 
 @section('js')
     <!-- jQuery -->
+    <script>
+               var productosVendidos = {!! json_encode($productos_vendidos) !!};
+                
+        // Extraer nombres y cantidades de productos para el gráfico
+        var nombresProductos = productosVendidos.map(producto => producto.nombre);
+        var cantidadesVendidas = productosVendidos.map(producto => producto.cantidad);
+        
+    </script>
+    <script>
+        var totalVentas = {{ $total_ventas  }};
+    
+    </script>
+    
     <script src="{{ asset('Template/vendors/jquery/dist/jquery.min.js') }}"></script>
 
     <!-- Bootstrap Core JS -->

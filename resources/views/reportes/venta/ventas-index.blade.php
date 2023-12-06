@@ -31,7 +31,7 @@
                 </div>
                 <div class="modal-body text-center">
                     <div class="row">
-                        <div class="col-md-6">
+                        <div class="col-md-4">
                             <a href="{{ route('venta_analitico') }}" class="text-decoration-none">
                                 <div class="mb-3">
                                     <i class="fa fa-chart-bar fa-3x text-white"></i>
@@ -39,11 +39,19 @@
                                 </div>
                             </a>
                         </div>
-                        <div class="col-md-6">
+                        <div class="col-md-4">
                             <a href="{{ route('venta_ejecutivo') }}" class="text-decoration-none">
                                 <div class="mb-3">
-                                    <i class="fa fa-cogs fa-3x text-white"></i>
+                                    <i class="fa fa-user-tie fa-3x text-white"></i>
                                     <p class="mt-2 text-white">Ejecutivos</p>
+                                </div>
+                            </a>
+                        </div>
+                        <div class="col-md-4">
+                            <a href="{{route('venta_personalizado')}}" class="text-decoration-none">
+                                <div class="mb-3">
+                                    <i class="fa fa-cogs fa-3x text-white"></i>
+                                    <p class="mt-2 text-white">Personalizados</p>
                                 </div>
                             </a>
                         </div>

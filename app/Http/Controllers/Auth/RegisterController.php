@@ -118,7 +118,7 @@ class RegisterController extends Controller
         $activity= Activity()
             ->causedBy($user->id)
             ->inLog($user->name)
-            ->performedOn(Empresa_cliente::find($user->id))
+            ->performedOn(Empresa_cliente::find($user->empresa_id))
             ->withProperties([
                 'razon_social' => $data['razon_social'],
                 'nit_empresa' => $data['nit'],
